@@ -9,6 +9,7 @@ struct SettingsView: View {
     @State private var draft: Launcher?
     @State private var original: Launcher?
     @State private var pending: Launcher?
+    @State private var pendingPresetID: UUID?
     @State private var discard = false
     @State private var delete = false
 
@@ -34,8 +35,12 @@ struct SettingsView: View {
             Button(model.t("ok")) { model.error = nil }
         } message: { Text(model.error ?? "") }
         .confirmationDialog(model.t("discard.title"), isPresented: $discard) {
-            Button(model.t("discard"), role: .destructive) { setDraft(pending); pending = nil }
-            Button(model.t("cancel"), role: .cancel) { pending = nil }
+            Button(model.t("discard"), role: .destructive) {
+                if let id = pendingPresetID { restorePreset(id) }
+                else { setDraft(pending) }
+                pending = nil; pendingPresetID = nil
+            }
+            Button(model.t("cancel"), role: .cancel) { pending = nil; pendingPresetID = nil }
         }
         .confirmationDialog(model.t("delete.title"), isPresented: $delete) {
             Button(model.t("delete"), role: .destructive) {
@@ -125,11 +130,37 @@ struct SettingsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 9))
                 .overlay(RoundedRectangle(cornerRadius: 9).stroke(.primary.opacity(0.08)))
                 .accessibilityIdentifier("launcher.list")
-                Button {
-                    choose(Launcher(name: model.t("custom.default"), method: .application))
-                } label: {
-                    Label(model.t("launcher.add"), systemImage: "plus")
-                }.controlSize(.large).disabled(model.readOnly).accessibilityIdentifier("launcher.add")
+                HStack(spacing: 0) {
+                    Button {
+                        choose(Launcher(name: model.t("custom.default"), method: .application))
+                    } label: {
+                        Label(model.t("launcher.add"), systemImage: "plus")
+                            .padding(.horizontal, 10).frame(height: 28).contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain).accessibilityIdentifier("launcher.add")
+                    Divider().frame(height: 16)
+                    Menu {
+                        ForEach(model.availablePresets) { preset in
+                            Button(preset.name) {
+                                if draft != original {
+                                    pending = nil; pendingPresetID = preset.id; discard = true
+                                } else { restorePreset(preset.id) }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "chevron.down").font(.system(size: 10, weight: .semibold))
+                            .frame(width: 28, height: 28).contentShape(Rectangle())
+                    }
+                    .menuStyle(.borderlessButton).menuIndicator(.hidden)
+                    .disabled(model.availablePresets.isEmpty)
+                    .accessibilityLabel(model.t("launcher.restore"))
+                    .accessibilityIdentifier("launcher.restore")
+                    .help(model.t(model.availablePresets.isEmpty ? "launcher.restore.none" : "launcher.restore"))
+                }
+                .fixedSize()
+                .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 6))
+                .overlay(RoundedRectangle(cornerRadius: 6).stroke(.primary.opacity(0.15)))
+                .disabled(model.readOnly)
                 Text(model.t("launchers.hint")).font(.caption).foregroundStyle(.secondary)
                 Spacer(minLength: 0)
             }.padding(24).frame(minWidth: 340, idealWidth: 400, maxWidth: .infinity)
@@ -153,8 +184,12 @@ struct SettingsView: View {
 
     private func choose(_ value: Launcher?) {
         guard value?.id != draft?.id else { return }
+        pendingPresetID = nil
         if draft != original { pending = value; discard = true }
         else { setDraft(value) }
+    }
+    private func restorePreset(_ id: UUID) {
+        if let preset = model.restorePreset(id: id) { setDraft(preset) }
     }
     private func setDraft(_ value: Launcher?) {
         draft = value

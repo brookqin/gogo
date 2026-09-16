@@ -57,6 +57,17 @@ final class AppModel: ObservableObject {
         return save(next)
     }
 
+    var availablePresets: [Launcher] {
+        let existingIDs = Set(configuration.launchers.map(\.id))
+        return Launcher.presets.filter { !existingIDs.contains($0.id) }
+    }
+
+    func restorePreset(id: UUID) -> Launcher? {
+        guard !readOnly, var preset = availablePresets.first(where: { $0.id == id }) else { return nil }
+        preset.enabled = true
+        return saveLauncher(preset) ? preset : nil
+    }
+
     @discardableResult
     func moveLaunchers(from source: IndexSet, to destination: Int) -> Bool {
         guard !readOnly, !source.isEmpty, source.allSatisfy(configuration.launchers.indices.contains),

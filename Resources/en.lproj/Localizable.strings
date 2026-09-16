@@ -23,6 +23,8 @@
 "enabled" = "Show in menu";
 "custom.default" = "My Tool";
 "launcher.add" = "Add Launcher";
+"launcher.restore" = "Restore Preset";
+"launcher.restore.none" = "No presets to restore";
 "launchers.hint" = "Drag to reorder. Click a launcher to edit.";
 "launcher.select" = "Select a launcher to configure";
 "extension.enabled" = "Finder extension enabled";

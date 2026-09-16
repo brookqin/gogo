@@ -11,7 +11,7 @@ Scope: the captured standard-size light-appearance settings UI, with the user's 
 - Additional implementation captures: `docs/screenshots/about-en.png`, `general-en.png`, `general-zh.png`, `general-auto.png`, `launchers-zh.png`, and `finder-en.png`, each 1040 × 692 px.
 - The source and current launcher screenshot were opened together in one comparison input. The source is a multi-window board: compare its upper-left settings window, not the whole board, to the implementation.
 - No pixel-for-pixel or CSS comparison is claimed. This is a native AppKit/SwiftUI app. Captures use one output pixel per logical point; the source board has no authoritative point density.
-- Current main state: the Zed preset selected in a fresh eight-launcher list, including Fork and Typora. Both README screenshots were recaptured from the native app after updating the presets; no custom test launcher remains. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
+- Current main state: the restored Zed preset selected at the end of an eight-launcher list, including Fork and Typora. Both README screenshots were recaptured from the native app after adding the split Add Launcher button; no custom test launcher remains. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
 - Full-view evidence covers the sidebar/list/inspector hierarchy, native controls, row grouping, primary Save action, and retained logo. The standalone About and General captures provide readable focused evidence for branding and removed copy; an additional crop was unnecessary.
 
 ## Review findings
@@ -23,7 +23,7 @@ No actionable P0/P1/P2 mismatch was found within this captured scope.
 - **Colors:** blue sidebar selection and enabled toggles, neutral native surfaces, and a blue Save button follow the reference. Inactive-window controls naturally turn gray; the final main capture shows the active appearance.
 - **Image quality:** the blue-and-white go icon is retained and clear in the sidebar and About page. Installed apps use their real icons; missing apps use a system placeholder and a truthful availability label.
 - **Copy/content:** New settings follow the system language; English and Simplified Chinese can be selected explicitly. About omits the bundle ID and development-validation copy. General and Finder omit process-lifecycle explanations. Argument and location guidance remains because it affects user choices.
-- **Interactions:** direct add, path/argument editing, save, language switching, and persistence were exercised. Native list selection now drives the inspector, and reordered preview rows survive relaunch. Per-row action menus have been removed. A failed real-container save retained the previous visible value. Broader control coverage is tracked in `docs/VALIDATION.md`.
+- **Interactions:** direct add, preset deletion/restoration, unsaved-draft cancellation/confirmation, path/argument editing, save, language switching, and persistence were exercised. The split button separates custom creation from preset restoration, with a disabled arrow when all presets are present. Native list selection now drives the inspector, and reordered preview rows survive relaunch. Per-row action menus have been removed. A failed real-container save retained the previous visible value. Broader control coverage is tracked in `docs/VALIDATION.md`.
 
 ## Comparison history
 
@@ -34,5 +34,5 @@ No actionable P0/P1/P2 mismatch was found within this captured scope.
 ## Follow-up coverage
 
 - Inspect dark appearance and minimum window size.
-- Exercise UI delete, failed-drop, and unsaved-draft edge cases.
+- Exercise native failed-drop and remaining drag edge cases.
 - Capture actual signed Finder menus on every supported OS; settings screenshots are not a substitute.

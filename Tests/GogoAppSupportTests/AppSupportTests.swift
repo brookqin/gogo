@@ -129,3 +129,44 @@ private func temporaryDirectory() throws -> URL {
     #expect(!model.moveLaunchers(from: IndexSet(integer: 0), to: 3))
     #expect(model.configuration == initial)
 }
+
+@MainActor @Test func removedPresetsRestoreWithoutChangingExistingLaunchers() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
+    let model = AppModel(preview: true, configurationFile: file)
+    let preset = try #require(Launcher.presets.first { $0.method == .iTerm })
+    let custom = Launcher(name: preset.name, program: "/usr/bin/true", method: .executable)
+    #expect(model.update {
+        $0.launchers.removeAll { $0.id == preset.id }
+        $0.launchers.reverse()
+        $0.launchers[0].name = "Renamed preset"
+        $0.launchers.append(custom)
+    })
+    let existing = model.configuration.launchers
+    #expect(model.availablePresets.map(\.id) == [preset.id])
+    let restored = try #require(model.restorePreset(id: preset.id))
+    var expected = preset; expected.enabled = true
+    #expect(restored == expected)
+    #expect(model.configuration.launchers == existing + [expected])
+    #expect(model.availablePresets.isEmpty)
+    #expect(model.restorePreset(id: preset.id) == nil)
+    #expect(model.restorePreset(id: UUID()) == nil)
+    #expect(AppModel(preview: true, configurationFile: file).configuration == model.configuration)
+}
+
+@MainActor @Test func failedPresetRestoreRemainsAvailableAndPreservesConfiguration() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
+    var configuration = Configuration()
+    let preset = configuration.launchers.removeFirst()
+    try file.write(configuration)
+    let model = AppModel(preview: true, configurationFile: file)
+    try FileManager.default.removeItem(at: file.url)
+    try FileManager.default.createDirectory(at: file.url, withIntermediateDirectories: true)
+    #expect(model.restorePreset(id: preset.id) == nil)
+    #expect(model.configuration == configuration)
+    #expect(model.availablePresets.map(\.id) == [preset.id])
+    #expect(model.error != nil)
+}

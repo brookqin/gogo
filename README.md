@@ -63,7 +63,7 @@ User-selected executables may themselves be long-lived. The host's lifecycle doe
 
 Drag launcher rows to change their order; changes are saved when you drop. Click a row to edit it.
 
-Click **Add Launcher** to start editing a new launcher immediately. Save adds it to the list; Cancel discards the new entry. The selected design and blue `go` logo remain the visual baseline. About shows product information without the bundle identifier. Implementation and release-validation details belong in developer documentation.
+**Add Launcher** is a split button. Click the main segment to create a custom launcher; Save adds it and Cancel discards the draft. The separate arrow lists missing presets. Select one to restore its default settings, enable it, and append it to the list. Existing launchers keep their order and settings. The arrow is disabled when there are no presets to restore. The selected design and blue `go` logo remain the visual baseline. About shows product information without the bundle identifier. Implementation and release-validation details belong in developer documentation.
 
 Existing saved language choices are preserved. New configurations default to Follow System.
 

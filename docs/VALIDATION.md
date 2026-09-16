@@ -4,17 +4,17 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 
 ## Verified in the current revision
 
-- **17 tests passed:** 9 core tests and 8 application-support tests.
+- **19 tests passed:** 9 core tests and 10 application-support tests.
 - Core coverage: literal Unicode, quote, space, and newline arguments; selection semantics; parent-folder deduplication; configuration round trips; corruption preservation; unsupported versions; invalid and oversized launch requests.
-- App-model coverage: Follow System defaults, preservation of explicit Chinese/English choices, add/edit/disable/remove persistence, drag move semantics in both directions and across multiple indices, rejected invalid moves, failed writes leaving published state unchanged, and corrupt configuration remaining read-only.
+- App-model coverage: Follow System defaults, preservation of explicit Chinese/English choices, add/edit/disable/remove persistence, drag move semantics in both directions and across multiple indices, rejected invalid moves, failed writes leaving published state unchanged, and corrupt configuration remaining read-only. Preset restoration tests cover iTerm-specific defaults, stable identity, duplicate prevention, preservation of edited/reordered/custom launchers, reload persistence, and failed writes.
 - Actual process test: the launcher starts a controlled executable fixture, which records its received argument and working directory. Shell-like text stays literal and does not execute; the working directory's filesystem identity matches the requested folder.
 - Unsigned Debug build passed for the host and Finder extension.
 - Unsigned Release universal build passed for both targets with arm64 and x86_64. Deployment target remains 15.7. This is build evidence, not runtime evidence for Intel or earlier macOS versions.
 - English and Chinese localization resources have matching keys. English and Simplified Chinese READMEs are maintained together; developer documentation remains English.
 - New configurations follow the system language. On the Chinese-language development system the native UI opens in Chinese. Explicit saved choices remain unchanged.
 - Zed, Fork, and Typora presets use bundle identifiers verified against the installed apps. All three resolve to their actual icons and paths in the native UI. Fork opens directories (or parent directories of selected files). Individual launch/runtime coverage remains pending below.
-- Both README screenshots were recaptured with a fresh default list: eight presets, no Cursor or custom test entries. Existing saved launcher lists are preserved rather than reset by the preset update.
-- Add Launcher is a regular button and directly opens a new custom-launcher editor, without an intermediate menu.
+- Both README screenshots show the split button and eight presets after restoring Zed to the end of the list, with no Cursor or custom test entries. Existing saved launcher lists are preserved rather than reset by the preset update.
+- Add Launcher is a split button: its main segment directly opens a custom editor, and its arrow lists only missing presets. Native preview verified removing and restoring Zed, automatic enablement and append order, and the arrow becoming disabled after restoration. Cancelling the unsaved-draft confirmation preserved the draft; confirming it restored the preset.
 - In isolated preview, a custom application path and two argument lines were saved through the UI. The resulting configuration file contained the exact path and argument array.
 - English → Simplified Chinese → English was verified in preview. The sidebar, settings content, and application Edit menu update without relaunching. Follow System was also selected and persisted through the native picker.
 - Native launcher rows expose no action menu. Clicking a row updates the inspector; a reordered preview list was observed in the UI and configuration file, then retained after relaunch.
@@ -43,7 +43,7 @@ The preview uses a separate configuration file. Its successful saves do not prov
 | Individual terminal/editor integrations | Presets still need cold-start and already-running checks, including iTerm2 Automation approval and denial. The executable fixture does not establish terminal compatibility. |
 | macOS 15.7 and 26 runtime | No matching runtime environment available. |
 | Intel runtime | Universal binaries compiled; no Intel runtime validation. |
-| UI delete/discard and drag edge cases | Basic row selection and reordered-list persistence were observed in preview. Failed-save, invalid-index, and multi-index moves are covered by model tests; exhaustive native interaction coverage remains pending. |
+| UI drag edge cases | Delete, restore, and discard/cancel flows were exercised in preview. Basic row selection and reordered-list persistence were also observed. Failed-save, invalid-index, and multi-index moves are covered by model tests; exhaustive native interaction coverage remains pending. |
 | Dark mode and minimum-window-size visual review | Pending; current captured visual scope is the standard-size light appearance. |
 | Developer ID, notarization, DMG, downloaded installation | Not performed. No release is published. |
 

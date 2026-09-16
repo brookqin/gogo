@@ -23,6 +23,8 @@
 "enabled" = "在菜单中显示";
 "custom.default" = "我的工具";
 "launcher.add" = "添加启动项";
+"launcher.restore" = "恢复预设";
+"launcher.restore.none" = "没有需要恢复的预设";
 "launchers.hint" = "拖拽调整顺序，点击启动项进行编辑。";
 "launcher.select" = "选择启动项以编辑";
 "extension.enabled" = "Finder 扩展已启用";
