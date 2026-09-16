@@ -1,0 +1,73 @@
+import AppKit
+import SwiftUI
+
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+    private var window: NSWindow?
+    private var model: AppModel?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        let args = CommandLine.arguments
+        if args.count == 3, args[1] == "--launch-request" {
+            NSApp.setActivationPolicy(.accessory)
+            Task {
+                var language = AppLanguage.system
+                do {
+                    let config = try SharedConfiguration.file().read()
+                    language = config.language
+                    try await LauncherEngine.run(LaunchRequest.decode(args[2]), configuration: config)
+                } catch {
+                    NSApp.activate(ignoringOtherApps: true)
+                    let alert = NSAlert()
+                    alert.messageText = Texts.get("launch.failed", language: language)
+                    alert.informativeText = Texts.error(error, language: language)
+                    alert.runModal()
+                }
+                NSApp.terminate(nil)
+            }
+            return
+        }
+        showSettings(preview: args.contains("--preview"))
+    }
+
+    private func showSettings(preview: Bool) {
+        NSApp.setActivationPolicy(.regular)
+        let model = AppModel(preview: preview)
+        self.model = model
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 660),
+                              styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
+        window.title = preview ? "gogo · Preview" : "gogo"
+        window.minSize = NSSize(width: 980, height: 620)
+        window.contentView = NSHostingView(rootView: SettingsView(model: model))
+        window.delegate = self
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        self.window = window
+        let menu = NSMenu()
+        let appMenu = NSMenu()
+        appMenu.addItem(withTitle: model.t("quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let root = NSMenuItem(); root.submenu = appMenu; menu.addItem(root)
+        let edit = NSMenuItem(title: model.t("edit"), action: nil, keyEquivalent: "")
+        let editMenu = NSMenu(title: model.t("edit"))
+        for (key, action, shortcut) in [("cut", "cut:", "x"), ("copy", "copy:", "c"), ("paste", "paste:", "v"), ("selectAll", "selectAll:", "a")] {
+            editMenu.addItem(withTitle: model.t(key), action: Selector(action), keyEquivalent: shortcut)
+        }
+        edit.submenu = editMenu; menu.addItem(edit)
+        NSApp.mainMenu = menu
+        NSApp.activate(ignoringOtherApps: true)
+    }
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        window?.makeKeyAndOrderFront(nil)
+        return true
+    }
+    func applicationDidBecomeActive(_ notification: Notification) { model?.refreshExtension() }
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+}
+
+MainActor.assumeIsolated {
+    let app = NSApplication.shared
+    let delegate = AppDelegate()
+    app.delegate = delegate
+    withExtendedLifetime(delegate) { app.run() }
+}

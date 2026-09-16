@@ -1,0 +1,444 @@
+// !$*UTF8*$!
+{
+	"archiveVersion" = 1;
+	"classes" = {
+	};
+	"objectVersion" = 56;
+	"objects" = {
+		"052C50FE95C46C50CC765716" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/GogoCore/Configuration.swift";
+			"sourceTree" = "<group>";
+		};
+		"5488B41ED2D1E22C3B0599B8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "052C50FE95C46C50CC765716";
+		};
+		"FC2C3EB20A86C0F76B87C5E6" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/GogoCore/LaunchPlan.swift";
+			"sourceTree" = "<group>";
+		};
+		"7255B002E921CD1F018B7946" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FC2C3EB20A86C0F76B87C5E6";
+		};
+		"9FCE0B0B1E894941063F38EE" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Platform.swift";
+			"sourceTree" = "<group>";
+		};
+		"D953E2BED7C3AAC930AC0F9B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9FCE0B0B1E894941063F38EE";
+		};
+		"60770164FB0DC56C68F13360" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/GogoFinder/FinderSync.swift";
+			"sourceTree" = "<group>";
+		};
+		"B471CE1177F997B2979908B0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "60770164FB0DC56C68F13360";
+		};
+		"CCF7327997DF9AF26844F9A0" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ("5488B41ED2D1E22C3B0599B8", "7255B002E921CD1F018B7946", "D953E2BED7C3AAC930AC0F9B", "B471CE1177F997B2979908B0");
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"5362F564584CED45A5B13EC8" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.icns";
+			"path" = "Resources/AppIcon.icns";
+			"sourceTree" = "<group>";
+		};
+		"1AFCD4BB7FE2FA4E93F0F2DF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "5362F564584CED45A5B13EC8";
+		};
+		"CF2087ACE15DD2A5893B0011" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "image.png";
+			"path" = "Assets/AppIcon.png";
+			"sourceTree" = "<group>";
+		};
+		"E672FF8814DE35D540F782F6" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CF2087ACE15DD2A5893B0011";
+		};
+		"2D564968239FABDD66D8CD59" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.strings";
+			"name" = "en";
+			"path" = "Resources/en.lproj/Localizable.strings";
+			"sourceTree" = "<group>";
+		};
+		"4950544AED0698FCE9ACEC85" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.strings";
+			"name" = "zh-Hans";
+			"path" = "Resources/zh-Hans.lproj/Localizable.strings";
+			"sourceTree" = "<group>";
+		};
+		"892CD7DA7B23A89866905E8D" = {
+			"isa" = "PBXVariantGroup";
+			"children" = ("2D564968239FABDD66D8CD59", "4950544AED0698FCE9ACEC85");
+			"name" = "Localizable.strings";
+			"sourceTree" = "<group>";
+		};
+		"18A32C9D7FBD11642E36D479" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "892CD7DA7B23A89866905E8D";
+		};
+		"E69261993370CFA1310ABF7E" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.strings";
+			"name" = "en";
+			"path" = "Resources/en.lproj/InfoPlist.strings";
+			"sourceTree" = "<group>";
+		};
+		"CE7984202E644CC95F9C6794" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.strings";
+			"name" = "zh-Hans";
+			"path" = "Resources/zh-Hans.lproj/InfoPlist.strings";
+			"sourceTree" = "<group>";
+		};
+		"067F630DC8337D9812C91D2B" = {
+			"isa" = "PBXVariantGroup";
+			"children" = ("E69261993370CFA1310ABF7E", "CE7984202E644CC95F9C6794");
+			"name" = "InfoPlist.strings";
+			"sourceTree" = "<group>";
+		};
+		"0D38C9AD10EB4ED45AC7DC8A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "067F630DC8337D9812C91D2B";
+		};
+		"DE7C0A3CD7B1B4D5616198F3" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ("1AFCD4BB7FE2FA4E93F0F2DF", "E672FF8814DE35D540F782F6", "18A32C9D7FBD11642E36D479", "0D38C9AD10EB4ED45AC7DC8A");
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"D3D3975C8CD93991192FBC42" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ();
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"15DC68627C2AC4C2E1ABB308" = {
+			"isa" = "PBXFileReference";
+			"explicitFileType" = "wrapper.app-extension";
+			"path" = "GogoFinder.appex";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+			"includeInIndex" = 0;
+		};
+		"0E1F1AD7E2F9BCAD09D1ADD7" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"PRODUCT_NAME" = "GogoFinder";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "cn.053x.gogo.finder";
+				"SWIFT_VERSION" = "5.0";
+				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
+				"SDKROOT" = "macosx";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"CODE_SIGN_IDENTITY" = "-";
+				"CODE_SIGN_ENTITLEMENTS" = "Config/Finder.entitlements";
+				"INFOPLIST_FILE" = "Config/Finder-Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"ENABLE_HARDENED_RUNTIME" = "YES";
+				"ENABLE_DEBUG_DYLIB" = "NO";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/../Frameworks");
+				"COMBINE_HIDPI_IMAGES" = "YES";
+				"APPLICATION_EXTENSION_API_ONLY" = "YES";
+				"SKIP_INSTALL" = "YES";
+			};
+			"name" = "Debug";
+		};
+		"160CFD18C9526637D403946E" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"PRODUCT_NAME" = "GogoFinder";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "cn.053x.gogo.finder";
+				"SWIFT_VERSION" = "5.0";
+				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
+				"SDKROOT" = "macosx";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"CODE_SIGN_IDENTITY" = "-";
+				"CODE_SIGN_ENTITLEMENTS" = "Config/Finder.entitlements";
+				"INFOPLIST_FILE" = "Config/Finder-Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"ENABLE_HARDENED_RUNTIME" = "YES";
+				"ENABLE_DEBUG_DYLIB" = "NO";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/../Frameworks");
+				"COMBINE_HIDPI_IMAGES" = "YES";
+				"APPLICATION_EXTENSION_API_ONLY" = "YES";
+				"SKIP_INSTALL" = "YES";
+			};
+			"name" = "Release";
+		};
+		"230A35D9355C81F5CB0031FC" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = ("0E1F1AD7E2F9BCAD09D1ADD7", "160CFD18C9526637D403946E");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"F99E61946CD6E593B62A2672" = {
+			"isa" = "PBXNativeTarget";
+			"buildConfigurationList" = "230A35D9355C81F5CB0031FC";
+			"buildPhases" = ("CCF7327997DF9AF26844F9A0", "D3D3975C8CD93991192FBC42", "DE7C0A3CD7B1B4D5616198F3");
+			"buildRules" = ();
+			"dependencies" = ();
+			"name" = "GogoFinder";
+			"productName" = "GogoFinder";
+			"productReference" = "15DC68627C2AC4C2E1ABB308";
+			"productType" = "com.apple.product-type.app-extension";
+		};
+		"7421D9785B84C4508D74FE1F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "052C50FE95C46C50CC765716";
+		};
+		"AC8187B3940FE3D63A2EE349" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FC2C3EB20A86C0F76B87C5E6";
+		};
+		"538A0A12BE4CD952B3FE1B24" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9FCE0B0B1E894941063F38EE";
+		};
+		"1064286C4793E3F9ACC75D94" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Gogo/AppModel.swift";
+			"sourceTree" = "<group>";
+		};
+		"5FE62DF54405BE504BC982B4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1064286C4793E3F9ACC75D94";
+		};
+		"7B819C9DE6A659B03F203EE4" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Gogo/LauncherEngine.swift";
+			"sourceTree" = "<group>";
+		};
+		"739218C2429E14D262943D42" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7B819C9DE6A659B03F203EE4";
+		};
+		"F8B8ECAD46CA0C3D65DB6CA9" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Gogo/SettingsView.swift";
+			"sourceTree" = "<group>";
+		};
+		"699D5656DC14CA7C268509C4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F8B8ECAD46CA0C3D65DB6CA9";
+		};
+		"84CE13748376CB033C2790CD" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Sources/Gogo/main.swift";
+			"sourceTree" = "<group>";
+		};
+		"CE3190FEAF3216803D24C32B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "84CE13748376CB033C2790CD";
+		};
+		"90414CBCD97AC3775D4703AC" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ("7421D9785B84C4508D74FE1F", "AC8187B3940FE3D63A2EE349", "538A0A12BE4CD952B3FE1B24", "5FE62DF54405BE504BC982B4", "739218C2429E14D262943D42", "699D5656DC14CA7C268509C4", "CE3190FEAF3216803D24C32B");
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"1078A222C58E821DA5E1EB38" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "5362F564584CED45A5B13EC8";
+		};
+		"E2F76B2ED467B471759FFC96" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CF2087ACE15DD2A5893B0011";
+		};
+		"8EF3C8174CDE866194D7F6BA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "892CD7DA7B23A89866905E8D";
+		};
+		"1E450F7EB8DBEAB78CE83B69" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "067F630DC8337D9812C91D2B";
+		};
+		"B57DFC67784665435F589494" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ("1078A222C58E821DA5E1EB38", "E2F76B2ED467B471759FFC96", "8EF3C8174CDE866194D7F6BA", "1E450F7EB8DBEAB78CE83B69");
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"15EF429B15565B62CC6AB684" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = 2147483647;
+			"files" = ();
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"6DEC24A06B61CB5C3CF1C9B1" = {
+			"isa" = "PBXFileReference";
+			"explicitFileType" = "wrapper.application";
+			"path" = "gogo.app";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+			"includeInIndex" = 0;
+		};
+		"ADC869E2D4DCFC14322D684F" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"PRODUCT_NAME" = "gogo";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "cn.053x.gogo";
+				"SWIFT_VERSION" = "5.0";
+				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
+				"SDKROOT" = "macosx";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"CODE_SIGN_IDENTITY" = "-";
+				"CODE_SIGN_ENTITLEMENTS" = "Config/Gogo.entitlements";
+				"INFOPLIST_FILE" = "Config/Gogo-Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"ENABLE_HARDENED_RUNTIME" = "YES";
+				"ENABLE_DEBUG_DYLIB" = "NO";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/../Frameworks");
+				"COMBINE_HIDPI_IMAGES" = "YES";
+			};
+			"name" = "Debug";
+		};
+		"EAD8491D4E5A67C7CE06A9A2" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"PRODUCT_NAME" = "gogo";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "cn.053x.gogo";
+				"SWIFT_VERSION" = "5.0";
+				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
+				"SDKROOT" = "macosx";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"CODE_SIGN_IDENTITY" = "-";
+				"CODE_SIGN_ENTITLEMENTS" = "Config/Gogo.entitlements";
+				"INFOPLIST_FILE" = "Config/Gogo-Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "NO";
+				"ENABLE_HARDENED_RUNTIME" = "YES";
+				"ENABLE_DEBUG_DYLIB" = "NO";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"LD_RUNPATH_SEARCH_PATHS" = ("$(inherited)", "@executable_path/../Frameworks");
+				"COMBINE_HIDPI_IMAGES" = "YES";
+			};
+			"name" = "Release";
+		};
+		"0562D44AC7EC23D34CBD1BCF" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = ("ADC869E2D4DCFC14322D684F", "EAD8491D4E5A67C7CE06A9A2");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"C565534B5FD4BEF2C3077C62" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "15DC68627C2AC4C2E1ABB308";
+			"settings" = {
+				"ATTRIBUTES" = ("RemoveHeadersOnCopy");
+			};
+		};
+		"4978CE1524D06EA4B8B6956F" = {
+			"isa" = "PBXCopyFilesBuildPhase";
+			"buildActionMask" = 2147483647;
+			"dstPath" = "";
+			"dstSubfolderSpec" = 13;
+			"files" = ("C565534B5FD4BEF2C3077C62");
+			"name" = "Embed Finder Extension";
+			"runOnlyForDeploymentPostprocessing" = 0;
+		};
+		"EBB30C28FB56077190499346" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "244210E48437B6556980A702";
+			"proxyType" = 1;
+			"remoteGlobalIDString" = "F99E61946CD6E593B62A2672";
+			"remoteInfo" = "GogoFinder";
+		};
+		"965FF32F58B180754D654307" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "F99E61946CD6E593B62A2672";
+			"targetProxy" = "EBB30C28FB56077190499346";
+		};
+		"3EB27F1F37B1704550FE7D57" = {
+			"isa" = "PBXNativeTarget";
+			"buildConfigurationList" = "0562D44AC7EC23D34CBD1BCF";
+			"buildPhases" = ("90414CBCD97AC3775D4703AC", "15EF429B15565B62CC6AB684", "B57DFC67784665435F589494", "4978CE1524D06EA4B8B6956F");
+			"buildRules" = ();
+			"dependencies" = ("965FF32F58B180754D654307");
+			"name" = "gogo";
+			"productName" = "gogo";
+			"productReference" = "6DEC24A06B61CB5C3CF1C9B1";
+			"productType" = "com.apple.product-type.application";
+		};
+		"0A3E27B8CA818264D75C8D81" = {
+			"isa" = "PBXGroup";
+			"children" = ("15DC68627C2AC4C2E1ABB308", "6DEC24A06B61CB5C3CF1C9B1");
+			"name" = "Products";
+			"sourceTree" = "<group>";
+		};
+		"19F479106CE8C3BA8C106518" = {
+			"isa" = "PBXGroup";
+			"children" = ("052C50FE95C46C50CC765716", "FC2C3EB20A86C0F76B87C5E6", "9FCE0B0B1E894941063F38EE", "60770164FB0DC56C68F13360", "5362F564584CED45A5B13EC8", "CF2087ACE15DD2A5893B0011", "892CD7DA7B23A89866905E8D", "067F630DC8337D9812C91D2B", "1064286C4793E3F9ACC75D94", "7B819C9DE6A659B03F203EE4", "F8B8ECAD46CA0C3D65DB6CA9", "84CE13748376CB033C2790CD", "0A3E27B8CA818264D75C8D81");
+			"sourceTree" = "<group>";
+		};
+		"2B23A31EEC75B029432F2445" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
+				"SDKROOT" = "macosx";
+			};
+			"name" = "Debug";
+		};
+		"07CA1E69F6068DEA30A4DA6B" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
+				"SDKROOT" = "macosx";
+			};
+			"name" = "Release";
+		};
+		"B4E10CAA9C5E22150B71559C" = {
+			"isa" = "XCConfigurationList";
+			"buildConfigurations" = ("2B23A31EEC75B029432F2445", "07CA1E69F6068DEA30A4DA6B");
+			"defaultConfigurationIsVisible" = 0;
+			"defaultConfigurationName" = "Release";
+		};
+		"244210E48437B6556980A702" = {
+			"isa" = "PBXProject";
+			"attributes" = {
+				"LastUpgradeCheck" = "2700";
+				"BuildIndependentTargetsInParallel" = "YES";
+			};
+			"buildConfigurationList" = "B4E10CAA9C5E22150B71559C";
+			"compatibilityVersion" = "Xcode 14.0";
+			"developmentRegion" = "en";
+			"hasScannedForEncodings" = 0;
+			"knownRegions" = ("en", "zh-Hans");
+			"mainGroup" = "19F479106CE8C3BA8C106518";
+			"productRefGroup" = "0A3E27B8CA818264D75C8D81";
+			"projectDirPath" = "";
+			"projectRoot" = "";
+			"targets" = ("3EB27F1F37B1704550FE7D57", "F99E61946CD6E593B62A2672");
+		};
+	};
+	"rootObject" = "244210E48437B6556980A702";
+}
