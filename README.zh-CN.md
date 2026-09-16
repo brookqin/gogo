@@ -37,7 +37,7 @@
 
 安装打包后的应用无需 Xcode 或 Apple 开发者账号。gogo 目前未经 Apple 公证，首次打开时可能被 macOS 拦截。
 
-1. 在 [GitHub Releases](https://github.com/brookqin/gogo/releases) 有安装包发布后下载，解压 ZIP 或打开 DMG，将 **gogo.app** 拖入**应用程序**。
+1. 在 [GitHub Releases](https://github.com/brookqin/gogo/releases) 有安装包发布后下载，Apple Silicon 芯片选择 **arm64**，Intel 芯片选择 **x86_64**。打开 DMG，将 **gogo.app** 拖入**应用程序**。
 2. 打开 gogo。若 macOS 提示无法验证开发者，前往**系统设置 → 隐私与安全性 → 仍要打开**，再确认**打开**。仅在信任下载来源时继续，具体可参考 [Apple 官方说明](https://support.apple.com/zh-cn/102445)。
 3. 在 gogo 中进入**通用 → Finder 扩展 → 管理扩展**，启用 gogo 的 Finder 扩展。不同 macOS 版本的系统设置位置可能有所不同。
 4. 在 Finder 中选择**显示 → 自定工具栏**，添加 gogo 按钮。使用过程中，文件访问权限由 macOS 按需请求。

@@ -10,4 +10,4 @@ for size in 16 32 128 256 512; do
 done
 iconutil -c icns "$iconset" -o Resources/AppIcon.icns
 python3 scripts/generate-project.py
-xcodebuild -project gogo.xcodeproj -scheme gogo -configuration Debug -derivedDataPath .build/xcode "$@" build
+xcodebuild -project gogo.xcodeproj -scheme gogo -configuration "${CONFIGURATION:-Debug}" -derivedDataPath "${DERIVED_DATA_PATH:-.build/xcode}" "$@" build

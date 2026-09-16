@@ -37,7 +37,7 @@ Presets require individual application and OS validation. Their presence does no
 
 Installing a packaged build does not require Xcode or an Apple developer account. gogo is currently not notarized by Apple, so macOS may block the first launch.
 
-1. Download a packaged build from [GitHub Releases](https://github.com/brookqin/gogo/releases), when available. Extract the ZIP or open the DMG, then drag **gogo.app** into **Applications**.
+1. Download a packaged build from [GitHub Releases](https://github.com/brookqin/gogo/releases), when available. Choose **arm64** for Apple Silicon or **x86_64** for Intel, open the DMG, then drag **gogo.app** into **Applications**.
 2. Open gogo. If macOS cannot verify the developer, go to **System Settings → Privacy & Security → Open Anyway**, then confirm **Open**. Only proceed if you trust the download source. See [Apple’s instructions](https://support.apple.com/en-gb/102445).
 3. In gogo, open **General → Finder Extension → Manage Extensions** and enable its Finder extension. The System Settings location may vary by macOS version.
 4. In Finder, choose **View → Customize Toolbar** and add the gogo button. macOS requests file access when needed during use.
