@@ -170,3 +170,23 @@ private func temporaryDirectory() throws -> URL {
     #expect(model.availablePresets.map(\.id) == [preset.id])
     #expect(model.error != nil)
 }
+
+@MainActor @Test func sharedPreferencesPersistCompleteSnapshotsAndRejectCorruption() throws {
+    let domain = "cn.053x.gogo.test." + UUID().uuidString
+    let store = PreferencesConfiguration(domain: domain)
+    defer { UserDefaults.standard.removePersistentDomain(forName: domain) }
+    let model = AppModel(preview: false, configurationFile: store)
+    #expect(model.configuration == Configuration())
+    #expect(model.update { $0.launchers[1].enabled = true; $0.language = .en })
+    let reloaded = AppModel(preview: false, configurationFile: PreferencesConfiguration(domain: domain))
+    #expect(reloaded.configuration == model.configuration)
+    let corrupt = Data("invalid JSON".utf8)
+    CFPreferencesSetValue("configuration" as CFString, corrupt as CFData, domain as CFString,
+                          kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+    #expect(CFPreferencesSynchronize(domain as CFString, kCFPreferencesCurrentUser, kCFPreferencesAnyHost))
+    let broken = AppModel(preview: false, configurationFile: store)
+    #expect(broken.readOnly)
+    #expect(!broken.update { $0.language = .zhHans })
+    #expect(CFPreferencesCopyValue("configuration" as CFString, domain as CFString,
+                                  kCFPreferencesCurrentUser, kCFPreferencesAnyHost) as? Data == corrupt)
+}

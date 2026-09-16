@@ -2,6 +2,21 @@ import AppKit
 import FinderSync
 
 final class FinderSync: FIFinderSync {
+    private enum MenuAction {
+        case launch(LaunchRequest)
+        case copy([String])
+    }
+    private var actions: [Int: MenuAction] = [:]
+    private var menuTags: [UInt: [Int]] = [:]
+    private var nextTag = 1
+
+    private func remember(_ action: MenuAction, for item: NSMenuItem, kind: FIMenuKind) {
+        item.tag = nextTag
+        nextTag += 1
+        actions[item.tag] = action
+        menuTags[kind.rawValue, default: []].append(item.tag)
+    }
+
     override init() {
         super.init()
         // Observe menu context only. No recursive enumeration, filesystem watcher or badges.
@@ -37,18 +52,10 @@ final class FinderSync: FIFinderSync {
     }
 
     override func menu(for menuKind: FIMenuKind) -> NSMenu? {
+        // Finder transports menu-item tags; payloads stay inside the extension.
+        for tag in menuTags.removeValue(forKey: menuKind.rawValue) ?? [] { actions.removeValue(forKey: tag) }
         let menu = NSMenu()
-        let config: Configuration
-        do { config = try SharedConfiguration.file().read() }
-        catch {
-            let unavailable = NSMenuItem(title: Texts.get("configuration.unavailable"), action: nil, keyEquivalent: "")
-            unavailable.isEnabled = false; menu.addItem(unavailable)
-            menu.autoenablesItems = false
-            addSettings(to: menu, language: .system)
-            return menu
-        }
         let toolbar = menuKind == .toolbarItemMenu
-        if !toolbar && !config.showContextMenu { return nil }
         let controller = FIFinderSyncController.default()
         let selected: [URL]
         switch menuKind {
@@ -57,15 +64,25 @@ final class FinderSync: FIFinderSync {
         default:
             selected = controller.targetedURL().map { [$0] } ?? []
         }
+        let config: Configuration
+        do { config = try SharedConfiguration.file().read() }
+        catch {
+            let unavailable = NSMenuItem(title: Texts.get("configuration.unavailable"), action: nil, keyEquivalent: "")
+            unavailable.isEnabled = false; menu.addItem(unavailable)
+            menu.autoenablesItems = false
+            addCopyPath(to: menu, selected: selected, language: .system, kind: menuKind)
+            addSettings(to: menu, language: .system)
+            return menu
+        }
+        if !toolbar && !config.showContextMenu { return nil }
         let content = NSMenu()
         if !toolbar || config.showToolbarLaunchers {
             for launcher in config.launchers where launcher.enabled {
                 let title = String(format: Texts.get("open.in", language: config.language), launcher.name)
                 let item = NSMenuItem(title: title, action: #selector(launch(_:)), keyEquivalent: "")
-                item.target = self
                 let selection = LaunchSelection(paths: selected.map(\.path))
                 let request = LaunchRequest(launcherID: launcher.id, selection: selection)
-                item.representedObject = request
+                remember(.launch(request), for: item, kind: menuKind)
                 // Availability and capabilities are reevaluated when the user opens the menu.
                 item.isEnabled = (try? request.encoded()) != nil && (try? LaunchPlan.make(launcher: launcher, selection: selection, isDirectory: Applications.isDirectory)) != nil
                 content.addItem(item)
@@ -76,6 +93,7 @@ final class FinderSync: FIFinderSync {
             }
         }
         content.autoenablesItems = false
+        addCopyPath(to: content, selected: selected, language: config.language, kind: menuKind)
         addSettings(to: content, language: config.language)
         if toolbar { return content }
         let parent = NSMenuItem(title: "gogo", action: nil, keyEquivalent: "")
@@ -84,21 +102,36 @@ final class FinderSync: FIFinderSync {
         return menu
     }
 
+    private func addCopyPath(to menu: NSMenu, selected: [URL], language: AppLanguage, kind: FIMenuKind) {
+        if !menu.items.isEmpty { menu.addItem(.separator()) }
+        let item = NSMenuItem(title: Texts.get("path.copy", language: language), action: #selector(copyPath(_:)), keyEquivalent: "")
+        // Snapshot the menu's context; selection may change before the action arrives.
+        remember(.copy(selected.map(\.path)), for: item, kind: kind)
+        item.isEnabled = !selected.isEmpty
+        menu.addItem(item)
+    }
+
+    // Leave NSMenuItem.target unset so Finder routes actions to this extension.
+    @IBAction func copyPath(_ sender: NSMenuItem) {
+        guard case let .copy(paths) = actions[sender.tag], !paths.isEmpty else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(paths.joined(separator: "\n"), forType: .string)
+    }
+
     private func addSettings(to menu: NSMenu, language: AppLanguage) {
         if !menu.items.isEmpty { menu.addItem(.separator()) }
-        let item = NSMenuItem(title: Texts.get("settings.open", language: language), action: #selector(settings), keyEquivalent: "")
-        item.target = self
+        let item = NSMenuItem(title: Texts.get("settings.open", language: language), action: #selector(settings(_:)), keyEquivalent: "")
         menu.addItem(item)
     }
     private var hostURL: URL {
         // gogo.app/Contents/PlugIns/GogoFinder.appex -> gogo.app
         Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
     }
-    @objc private func settings() {
+    @IBAction func settings(_ sender: Any?) {
         NSWorkspace.shared.openApplication(at: hostURL, configuration: NSWorkspace.OpenConfiguration(), completionHandler: nil)
     }
-    @objc private func launch(_ sender: NSMenuItem) {
-        guard let request = sender.representedObject as? LaunchRequest, let encoded = try? request.encoded() else { return }
+    @IBAction func launch(_ sender: NSMenuItem) {
+        guard case let .launch(request) = actions[sender.tag], let encoded = try? request.encoded() else { return }
         let options = NSWorkspace.OpenConfiguration()
         options.activates = false
         options.createsNewApplicationInstance = true

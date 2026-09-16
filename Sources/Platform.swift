@@ -5,12 +5,40 @@ import GogoCore
 #endif
 
 enum SharedConfiguration {
-    static let groupID = "group.cn.053x.gogo"
-    static func file() throws -> ConfigurationFile {
-        guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupID) else {
-            throw GogoError.unavailableSharedContainer
+    static func file() -> PreferencesConfiguration {
+        PreferencesConfiguration(domain: "cn.053x.gogo.settings")
+    }
+}
+
+/// One versioned JSON value is published as a complete snapshot through cfprefsd.
+/// The extension has read-only access to this exact preference domain.
+struct PreferencesConfiguration: ConfigurationStorage {
+    let domain: String
+    private var appID: CFString { domain as CFString }
+    private var key: CFString { "configuration" as CFString }
+
+    func read() throws -> Configuration {
+        guard CFPreferencesSynchronize(appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost) else {
+            throw CocoaError(.fileReadUnknown)
         }
-        return ConfigurationFile(url: container.appendingPathComponent("configuration.json"))
+        guard let value = CFPreferencesCopyValue(key, appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost) else {
+            return Configuration()
+        }
+        guard let data = value as? Data else { throw CocoaError(.fileReadCorruptFile) }
+        let configuration = try JSONDecoder().decode(Configuration.self, from: data)
+        try configuration.validate()
+        return configuration
+    }
+
+    func write(_ configuration: Configuration) throws {
+        try configuration.validate()
+        let data = try JSONEncoder().encode(configuration)
+        let previous = CFPreferencesCopyValue(key, appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+        CFPreferencesSetValue(key, data as CFData, appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+        guard CFPreferencesSynchronize(appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost) else {
+            CFPreferencesSetValue(key, previous, appID, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+            throw CocoaError(.fileWriteUnknown)
+        }
     }
 }
 

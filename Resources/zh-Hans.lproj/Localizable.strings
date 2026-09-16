@@ -86,4 +86,5 @@
 "error.invalidRequest" = "启动请求无效，或启动项已停用。";
 "error.missingApplication" = "未找到应用，请在设置中选择其位置。";
 "error.unavailableSharedContainer" = "gogo 无法访问设置，请重新安装后再试。";
-"settings.saveFailed" = "无法保存设置，请重新安装 gogo 后再试。";
+"settings.saveFailed" = "无法保存设置，本次更改尚未生效。请重试。";
+"path.copy" = "拷贝路径";

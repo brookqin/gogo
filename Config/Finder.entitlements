@@ -4,9 +4,9 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
-	<key>com.apple.security.application-groups</key>
+	<key>com.apple.security.temporary-exception.shared-preference.read-only</key>
 	<array>
-		<string>group.cn.053x.gogo</string>
+		<string>cn.053x.gogo.settings</string>
 	</array>
 </dict>
 </plist>

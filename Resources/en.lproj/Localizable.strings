@@ -86,4 +86,5 @@
 "error.invalidRequest" = "The launch request is invalid or the launcher is disabled.";
 "error.missingApplication" = "Application not found. Choose its location in Settings.";
 "error.unavailableSharedContainer" = "gogo could not access its settings. Reinstall gogo and try again.";
-"settings.saveFailed" = "Your settings could not be saved. Reinstall gogo and try again.";
+"settings.saveFailed" = "Your settings could not be saved. Your changes have not been applied. Please try again.";
+"path.copy" = "Copy Path";

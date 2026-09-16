@@ -85,13 +85,20 @@ public enum GogoError: String, Error, LocalizedError {
     public var errorDescription: String? { rawValue }
 }
 
+public protocol ConfigurationStorage: Sendable {
+    func read() throws -> Configuration
+    func write(_ configuration: Configuration) throws
+}
+
 /// The host is the sole writer. The Finder extension only reads snapshots.
-public struct ConfigurationFile: Sendable {
+public struct ConfigurationFile: ConfigurationStorage {
     public let url: URL
     public init(url: URL) { self.url = url }
     public func read() throws -> Configuration {
-        guard FileManager.default.fileExists(atPath: url.path) else { return Configuration() }
-        let configuration = try JSONDecoder().decode(Configuration.self, from: Data(contentsOf: url))
+        let data: Data
+        do { data = try Data(contentsOf: url) }
+        catch CocoaError.fileReadNoSuchFile { return Configuration() }
+        let configuration = try JSONDecoder().decode(Configuration.self, from: data)
         try configuration.validate()
         return configuration
     }

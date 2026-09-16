@@ -11,10 +11,10 @@ final class AppModel: ObservableObject {
     @Published var error: String?
     @Published var readOnly = false
     @Published var extensionEnabled = false
-    let file: ConfigurationFile?
+    let file: (any ConfigurationStorage)?
     let preview: Bool
 
-    init(preview: Bool, configurationFile: ConfigurationFile? = nil) {
+    init(preview: Bool, configurationFile: (any ConfigurationStorage)? = nil) {
         self.preview = preview
         do {
             let file = try configurationFile ?? (preview
@@ -38,8 +38,10 @@ final class AppModel: ObservableObject {
             guard !readOnly, let file else { throw GogoError.unavailableSharedContainer }
             try file.write(next)
             configuration = next
+            error = nil
             return true
         } catch {
+            NSLog("gogo: settings save failed (%@, %ld)", (error as NSError).domain, (error as NSError).code)
             self.error = error is GogoError ? Texts.error(error, language: configuration.language) : t("settings.saveFailed")
             return false
         }

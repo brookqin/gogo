@@ -24,7 +24,8 @@ On September 16, 2026, the user selected the first concept and explicitly retain
 - Application arguments require a new application instance. The UI explains that behavior; document opening can reuse an existing application.
 - Only executable launchers expose an actual process working directory. Application launchers receive directory tokens through supported arguments.
 - Finder uses system NSMenu surfaces. The observed root declares menu scope; there is no filesystem scan, badge, or recursive watcher.
-- Shared settings live in a versioned JSON file in an App Group. The host is the writer; the extension reads a fresh snapshot when building its menu.
+- Shared settings are one versioned JSON Data value in the `cn.053x.gogo.settings` CFPreferences domain. The host publishes complete snapshots; the sandboxed extension has only the documented shared-preference read-only exception for this domain. This removes the protected App Group dependency that prevented ad-hoc local builds from saving on macOS 27. The preview retains its separate atomic JSON file.
+- Copy Path uses the menu context: selected items for an item context menu, targeted folder for the toolbar/background/sidebar. Multiple paths use newline separators, without shell quoting. Copy remains available if configuration loading fails.
 - Launch requests start a separate host instance with a bounded encoded argument. The settings instance remains independent. There is no web-addressable URL scheme.
 - No resident tray app, login item, polling daemon, or permanent XPC service.
 - The earlier conversation's macOS 27 root-cause discussion is a hypothesis, not established evidence.
@@ -34,7 +35,7 @@ On September 16, 2026, the user selected the first concept and explicitly retain
 - [Finder Sync](https://developer.apple.com/documentation/findersync)
 - [FIFinderSync](https://developer.apple.com/documentation/findersync/fifindersync-swift.class)
 - [New application instances](https://developer.apple.com/documentation/appkit/nsworkspace/openconfiguration/createsnewapplicationinstance)
-- [App Groups](https://developer.apple.com/documentation/xcode/configuring-app-groups)
+- [Shared preference domain exceptions](https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AppSandboxTemporaryExceptionEntitlements.html)
 - [Ghostty CLI configuration](https://ghostty.org/docs/config)
 
 The design's non-resident requirement applies to the host. The operating system controls the Finder extension's lifetime.

@@ -19,7 +19,8 @@ gogo is an independent Swift macOS project inspired by the workflow of [OpenInTe
 - Finder context submenu and toolbar menu, with a persistent Settings recovery entry.
 - Drag to reorder launchers; click a row to edit.
 - Automatically follows the system language, with English and Simplified Chinese overrides.
-- Versioned, atomically written shared settings. Unreadable settings are never silently overwritten.
+- Copy paths from the Finder context menu or toolbar (multiple selections are separated by newlines).
+- Versioned shared settings stored as complete snapshots. Unreadable settings are never silently overwritten.
 - On-demand launch handling; the host exits after dispatching the selected application.
 
 Presets require individual application and OS validation. Their presence does not imply all integrations have passed.
@@ -45,7 +46,7 @@ open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 
 Preview configuration lives under `gogo-preview/configuration.json` in the system temporary directory and does not configure the Finder extension. Ad-hoc signing is not a distribution workflow.
 
-For real Finder installation, configure the same development team and valid signing/provisioning for both Xcode targets and App Group `group.cn.053x.gogo`. Host bundle ID: `cn.053x.gogo`; extension: `cn.053x.gogo.finder`. Signing settings may also be passed to the build script, for example `DEVELOPMENT_TEAM=YOUR_TEAM CODE_SIGN_IDENTITY="Apple Development"`.
+For distribution, configure the same development team and valid signing for both Xcode targets. App Group provisioning is not required. Host bundle ID: `cn.053x.gogo`; extension: `cn.053x.gogo.finder`. Signing settings may also be passed to the build script, for example `DEVELOPMENT_TEAM=YOUR_TEAM CODE_SIGN_IDENTITY="Apple Development"`.
 
 After installation, open gogo once and use **Finder → Manage Extensions**. Finder toolbar customization controls the button's placement. Extension settings entry points must be checked on each supported macOS version.
 
@@ -62,7 +63,11 @@ pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
 pluginkit -m -A -D -v -i cn.053x.gogo.finder
 ```
 
-Ad-hoc registration and a visible settings entry do not establish App Group access or a working Finder launch flow. Use appropriate signing/provisioning for integration and distribution testing.
+The host writes one versioned JSON snapshot through CFPreferences in `cn.053x.gogo.settings`. The sandboxed extension has a read-only shared-preference entitlement for that exact domain and refreshes it when opening a menu. This supports local ad-hoc builds without a protected App Group container. Developer ID signing and notarization still require release validation.
+
+Older development builds used `group.cn.053x.gogo/configuration.json`. That file is left untouched; inaccessible old-container settings are not automatically imported. Preview settings remain separate.
+
+**Copy Path:** right-click selected files/folders to copy their absolute paths, one per line. The toolbar and folder-background menu copy the current folder path. Paths are plain text, without shell quoting.
 
 ## Arguments
 

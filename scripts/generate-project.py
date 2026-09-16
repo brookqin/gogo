@@ -31,8 +31,8 @@ extension_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXEC
     CFBundleVersion='1', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
     NSExtension=dict(NSExtensionPointIdentifier='com.apple.FinderSync', NSExtensionPrincipalClass='$(PRODUCT_MODULE_NAME).FinderSync'))
 for filename, value in [('Gogo-Info.plist',host_info),('Finder-Info.plist',extension_info),
-    ('Gogo.entitlements', {'com.apple.security.application-groups':['group.cn.053x.gogo'], 'com.apple.security.automation.apple-events':True}),
-    ('Finder.entitlements', {'com.apple.security.app-sandbox':True, 'com.apple.security.application-groups':['group.cn.053x.gogo']})]:
+    ('Gogo.entitlements', {'com.apple.security.automation.apple-events':True}),
+    ('Finder.entitlements', {'com.apple.security.app-sandbox':True, 'com.apple.security.temporary-exception.shared-preference.read-only':['cn.053x.gogo.settings']})]:
     (config/filename).write_bytes(plistlib.dumps(value,sort_keys=False))
 
 files = []

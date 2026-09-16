@@ -4,7 +4,7 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 
 ## Verified in the current revision
 
-- **19 tests passed:** 9 core tests and 10 application-support tests.
+- **20 tests passed:** 9 core tests and 11 application-support tests.
 - Core coverage: literal Unicode, quote, space, and newline arguments; selection semantics; parent-folder deduplication; configuration round trips; corruption preservation; unsupported versions; invalid and oversized launch requests.
 - App-model coverage: Follow System defaults, preservation of explicit Chinese/English choices, add/edit/disable/remove persistence, drag move semantics in both directions and across multiple indices, rejected invalid moves, failed writes leaving published state unchanged, and corrupt configuration remaining read-only. Preset restoration tests cover iTerm-specific defaults, stable identity, duplicate prevention, preservation of edited/reordered/custom launchers, reload persistence, and failed writes.
 - Actual process test: the launcher starts a controlled executable fixture, which records its received argument and working directory. Shell-like text stays literal and does not execute; the working directory's filesystem identity matches the requested folder.
@@ -20,7 +20,10 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 - Native launcher rows expose no action menu. Clicking a row updates the inspector; a reordered preview list was observed in the UI and configuration file, then retained after relaunch.
 - About, General, and Finder screenshots confirm that the bundle ID, lifecycle explanation, and internal compatibility status are absent from the UI.
 - Closing the settings window was followed by a process check: no gogo process remained. Computer Use automatically relaunches a closed app when asked to read it again, so the exit check was performed independently.
-- Real shared-container write denial was observed in a non-preview ad-hoc/unsigned development run. The UI retained its original language rather than pretending the save had succeeded. The underlying container name is now replaced by a user-facing save error.
+- Reproduced the installed application's save failure by enabling Zed. Replaced protected App Group file storage with a versioned JSON snapshot in CFPreferences and a read-only shared-preference entitlement for the Finder extension. On the installed ad-hoc build, enabling Zed succeeds, survives host restart, and appears in the Finder toolbar menu.
+- Shared-preference tests cover complete-snapshot persistence across separate store/model instances and corrupt-data preservation with the UI remaining read-only. The isolated file store now distinguishes a missing file from other read errors.
+- Native Finder toolbar Copy Path wrote the current folder path to the clipboard. The gogo context submenu copied two selected folder paths separated by a newline, verified against the exact selected paths. Menu payloads are retained in the extension and looked up by transported integer tags; passing representedObject did not produce a working copy action in the tested Finder runtime.
+- Copy Path remains independent of launcher enablement and is also built in the configuration-error recovery menu. English and Chinese labels are present. Empty selections disable the command; error/empty cases remain code-reviewed rather than separate native runtime checks.
 
 ## Screenshots
 
@@ -32,16 +35,16 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 - [General, Simplified Chinese](screenshots/general-zh.png)
 - [Finder settings, English](screenshots/finder-en.png)
 
-The preview uses a separate configuration file. Its successful saves do not prove App Group sharing or Finder extension behavior.
+The preview uses a separate configuration file. Its successful saves do not prove shared-preference access or Finder extension behavior; installed runtime checks are recorded separately above.
 
 ## Remaining gaps
 
 | Check | Status |
 | --- | --- |
-| Signed App Group sharing | No valid code-signing identity is installed. Xcode rejects the entitlement-bearing development build without a certificate. A normal local run also demonstrated shared-container write denial. |
+| Shared settings | Installed ad-hoc host save/relaunch and sandboxed Finder read verified on macOS 27. App Groups are no longer used. Other OS versions and Developer ID builds remain pending. |
 | Finder registration | Ad-hoc local installation in `/Applications/gogo.app` is registered by PlugInKit and visible in System Settings on macOS 27. Original preview signatures omitted the sandbox entitlement; pkd explicitly rejected them. Re-signing with the configured entitlements and registering the installed containing app resolved discovery. |
 | Finder toolbar image | Extension enablement and toolbar-image callbacks observed on macOS 27. A dedicated 18-point image with concrete 18px/36px bitmap representations renders correctly in the toolbar and customization palette after updating the installed app and refreshing Finder. Archive round-trip checks confirm both sizes and image coverage. |
-| Finder contextual menus, launch dispatch, and shared settings | Still pending end-to-end runtime validation; toolbar rendering does not prove App Group access or launcher execution. |
+| Finder menu actions | Toolbar and multi-selection context Copy Path verified against clipboard contents. Individual launcher dispatch still requires end-to-end validation. |
 | Individual terminal/editor integrations | Presets still need cold-start and already-running checks, including iTerm2 Automation approval and denial. The executable fixture does not establish terminal compatibility. |
 | macOS 15.7 and 26 runtime | No matching runtime environment available. |
 | Intel runtime | Universal binaries compiled; no Intel runtime validation. |
@@ -51,7 +54,7 @@ The preview uses a separate configuration file. Its successful saves do not prov
 
 ## Release acceptance
 
-1. Sign both targets with the same team and matching App Group; install and launch from Applications.
+1. Sign both targets with the same team, preserving the sandbox and read-only shared-preference entitlement; install and launch from Applications.
 2. Save settings in the host and verify menu order, enablement, and language refresh in the extension.
 3. Exercise selected files/folders, background clicks, sidebar, toolbar, no accessible location, and multiple Finder windows.
 4. Validate each preset cold and already running; test iTerm2 permission approval and denial.

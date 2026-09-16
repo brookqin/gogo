@@ -19,7 +19,7 @@ gogo 是独立开发的 Swift macOS 项目，使用场景受 [OpenInTerminal](ht
 - Finder 右键子菜单与工具栏菜单，并保留设置入口。
 - 默认跟随系统语言，也可手动选择 English 或简体中文。
 - 拖拽启动项调整顺序，点击行即可编辑，无行末操作菜单。
-- 共享配置具有版本标识并原子写入；读取失败时不会静默覆盖原有设置。
+- 共享配置具有版本标识，以完整快照保存；读取失败时不会静默覆盖原有设置。
 - 按需处理启动请求，完成后主程序退出。
 
 各终端和编辑器仍需独立验证；提供预设不代表该应用已在全部目标系统上通过测试。
@@ -45,7 +45,7 @@ open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 
 预览配置位于系统临时目录下的 `gogo-preview/configuration.json`，不会配置 Finder 扩展。Ad-hoc 签名不能替代正式发行签名。
 
-实际安装 Finder 扩展时，需为两个 Xcode target 配置同一开发团队、有效签名与 provisioning，并使用 App Group `group.cn.053x.gogo`。主程序 bundle ID 为 `cn.053x.gogo`，扩展为 `cn.053x.gogo.finder`。也可向构建脚本传入 `DEVELOPMENT_TEAM=你的团队ID CODE_SIGN_IDENTITY="Apple Development"`。
+正式分发时，需为两个 Xcode target 配置同一开发团队与有效签名。无需配置 App Group provisioning。主程序 bundle ID 为 `cn.053x.gogo`，扩展为 `cn.053x.gogo.finder`。也可向构建脚本传入 `DEVELOPMENT_TEAM=你的团队ID CODE_SIGN_IDENTITY="Apple Development"`。
 
 安装后先打开一次 gogo，再进入 **Finder → 管理扩展**。通过 Finder 的“显示 → 自定工具栏”调整按钮位置；扩展设置入口需要在各目标系统上验证。
 
@@ -62,7 +62,7 @@ pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
 pluginkit -m -A -D -v -i cn.053x.gogo.finder
 ```
 
-Ad-hoc 签名下注册成功、设置中可见，不代表 App Group 访问和 Finder 启动流程已通过验证。集成与发行测试仍需正确的签名和 provisioning。
+本地 ad-hoc 安装的共享设置及拷贝路径已在 macOS 27 验证；各应用启动流程及其他系统版本仍需分别验证。
 
 ## 启动参数
 
@@ -91,3 +91,11 @@ Ad-hoc 签名下注册成功、设置中可见，不代表 App Group 访问和 F
 ## 许可证
 
 [MIT](LICENSE)。本项目独立实现，未复制 OpenInTerminal 源码。
+
+## 拷贝路径与共享设置
+
+在 Finder 右键菜单和工具栏的 gogo 菜单中选择「拷贝路径」。右键选中文件或文件夹时，复制其绝对路径，多选以换行分隔；工具栏和文件夹空白处菜单复制当前文件夹路径。复制内容为普通文本，不添加 shell 引号。
+
+主程序通过 CFPreferences 在 `cn.053x.gogo.settings` 域保存完整的版本化 JSON 配置，沙盒扩展仅有此域的只读权限，每次打开菜单重新读取。本地 ad-hoc 签名无需 App Group 容器即可保存和共享设置，正式发布仍需验证 Developer ID 签名与公证。
+
+旧开发版的 `group.cn.053x.gogo/configuration.json` 保留不动；无法访问的旧容器设置不会自动导入。预览配置仍独立存储。
