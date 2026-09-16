@@ -323,6 +323,9 @@ private struct LauncherInspector: View {
                         Toggle(model.t("files"), isOn: $launcher.acceptsFiles)
                         Toggle(model.t("folders"), isOn: $launcher.acceptsFolders)
                     }.toggleStyle(.checkbox)
+                    Text(model.t("scope.help"))
+                        .font(.caption).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 HStack {
                     if canDelete {

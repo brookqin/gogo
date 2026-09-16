@@ -63,6 +63,7 @@
 "method.help.executable" = "使用指定参数和工作目录运行此程序。";
 "method.help.iTerm" = "打开新的 iTerm2 窗口；macOS 可能请求自动化权限。";
 "scope" = "适用范围";
+"scope.help" = "在 Finder 中选中文件或文件夹时，只有勾选的类型可使用此启动项。选中未勾选的类型，菜单项会置灰；混合选择需同时勾选两项。";
 "files" = "文件";
 "folders" = "文件夹";
 "save" = "保存";

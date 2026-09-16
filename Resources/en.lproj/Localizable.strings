@@ -63,6 +63,7 @@
 "method.help.executable" = "Runs this program with your arguments and working folder.";
 "method.help.iTerm" = "Opens a new iTerm2 window. macOS may request Automation permission.";
 "scope" = "Applies To";
+"scope.help" = "Choose which Finder selections this launcher supports. Its menu item is disabled if any selected item has an unchecked type. Select both for a mix of files and folders.";
 "files" = "Files";
 "folders" = "Folders";
 "save" = "Save";
