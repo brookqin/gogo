@@ -17,6 +17,7 @@ gogo is an independent Swift macOS project inspired by the workflow of [OpenInTe
 - Configurable presets for Terminal, iTerm2, Ghostty, Visual Studio Code, Zed, Fork, Typora, and Xcode.
 - Custom application or executable paths and one argument per line.
 - Finder context submenu and toolbar menu, with a persistent Settings recovery entry.
+- Finder menus cover visible mounted volumes, including external drives, and refresh when drives are connected or ejected.
 - Drag to reorder launchers; click a row to edit.
 - Automatically follows the system language, with English and Simplified Chinese overrides.
 - Copy paths from the Finder context menu or toolbar (multiple selections are separated by newlines).
@@ -67,7 +68,7 @@ The host writes one versioned JSON snapshot through CFPreferences in `cn.053x.go
 
 Older development builds used `group.cn.053x.gogo/configuration.json`. That file is left untouched; inaccessible old-container settings are not automatically imported. Preview settings remain separate.
 
-**Copy Path:** right-click selected files/folders to copy their absolute paths, one per line. The toolbar and folder-background menu copy the current folder path. Paths are plain text, without shell quoting.
+**Copy Current Path:** in the Finder context or toolbar menu, copy the absolute paths of selected files/folders, one per line. With nothing selected, copy the current folder path. Paths are plain text, without shell quoting.
 
 ## Arguments
 
@@ -78,6 +79,8 @@ Older development builds used `group.cn.053x.gogo/configuration.json`. That file
 Use `{paths}` on its own line for selected paths, one argument per item. Use `{directory}` for the selected directory or a file's parent directory. Do not add shell quotes. Tilde, environment variables, globbing, and shell commands are not expanded. Argument-based launchers currently require a selection that resolves to one working directory; document launchers allow multiple directories.
 
 User-selected executables may themselves be long-lived. The host's lifecycle does not terminate them.
+
+The Finder toolbar and **Quick Open with gogo** context entry use a monochrome go mark. Launcher entries show only their names and application icons; Copy Current Path and Settings have dedicated symbols.
 
 ## Configuration UI
 

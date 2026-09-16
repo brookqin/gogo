@@ -190,3 +190,38 @@ private func temporaryDirectory() throws -> URL {
     #expect(CFPreferencesCopyValue("configuration" as CFString, domain as CFString,
                                   kCFPreferencesCurrentUser, kCFPreferencesAnyHost) as? Data == corrupt)
 }
+
+@Test func handoffDocumentsAreValidatedAndConsumedOnce() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let url = directory.appendingPathComponent(UUID().uuidString + ".gogorequest")
+    let request = LaunchRequest(launcherID: Launcher.presets[0].id,
+                                selection: LaunchSelection(paths: ["/Volumes/Drive with spaces/中文"]))
+    try Data(request.encoded().utf8).write(to: url)
+    let decoded = try LaunchHandoff.consume(url, directory: directory)
+    #expect(decoded.launcherID == request.launcherID)
+    #expect(decoded.selection == request.selection)
+    #expect(!FileManager.default.fileExists(atPath: url.path))
+    #expect(throws: GogoError.invalidRequest) { try LaunchHandoff.consume(url, directory: directory) }
+}
+
+@Test func handoffRejectsOutsidePathsSymlinksExpiredAndOversizedFiles() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let outside = directory.appendingPathComponent(UUID().uuidString + ".gogorequest")
+    let insideDirectory = directory.appendingPathComponent("requests")
+    try FileManager.default.createDirectory(at: insideDirectory, withIntermediateDirectories: true)
+    let request = LaunchRequest(launcherID: Launcher.presets[0].id, selection: LaunchSelection(paths: ["/tmp"]))
+    try Data(request.encoded().utf8).write(to: outside)
+    #expect(throws: GogoError.invalidRequest) { try LaunchHandoff.consume(outside, directory: insideDirectory) }
+    let url = insideDirectory.appendingPathComponent(UUID().uuidString + ".gogorequest")
+    try FileManager.default.createSymbolicLink(at: url, withDestinationURL: outside)
+    #expect(throws: GogoError.invalidRequest) { try LaunchHandoff.consume(url, directory: insideDirectory) }
+    try FileManager.default.removeItem(at: url)
+    try Data(request.encoded().utf8).write(to: url)
+    try FileManager.default.setAttributes([.modificationDate: Date(timeIntervalSinceNow: -600)], ofItemAtPath: url.path)
+    #expect(throws: GogoError.invalidRequest) { try LaunchHandoff.consume(url, directory: insideDirectory) }
+    try Data(repeating: 65, count: 128 * 1024 + 1).write(to: url)
+    #expect(throws: GogoError.invalidRequest) { try LaunchHandoff.consume(url, directory: insideDirectory) }
+    #expect(FileManager.default.fileExists(atPath: outside.path))
+}

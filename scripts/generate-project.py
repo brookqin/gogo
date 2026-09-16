@@ -24,6 +24,11 @@ host_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABL
     CFBundlePackageType='APPL', CFBundleShortVersionString='0.1.0', CFBundleVersion='1',
     CFBundleIconFile='AppIcon', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
     LSUIElement=True, NSHighResolutionCapable=True,
+    CFBundleDocumentTypes=[dict(CFBundleTypeName='gogo Launch Request', CFBundleTypeRole='Viewer',
+        LSHandlerRank='None', LSItemContentTypes=['cn.053x.gogo.launch-request'])],
+    UTExportedTypeDeclarations=[dict(UTTypeIdentifier='cn.053x.gogo.launch-request',
+        UTTypeConformsTo=['public.data'], UTTypeDescription='gogo Launch Request',
+        UTTypeTagSpecification={'public.filename-extension':['gogorequest']})],
     NSAppleEventsUsageDescription='gogo opens the selected folder in your terminal when you choose its Finder menu item.')
 extension_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABLE_NAME)',
     CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='gogo Finder',
@@ -32,7 +37,7 @@ extension_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXEC
     NSExtension=dict(NSExtensionPointIdentifier='com.apple.FinderSync', NSExtensionPrincipalClass='$(PRODUCT_MODULE_NAME).FinderSync'))
 for filename, value in [('Gogo-Info.plist',host_info),('Finder-Info.plist',extension_info),
     ('Gogo.entitlements', {'com.apple.security.automation.apple-events':True}),
-    ('Finder.entitlements', {'com.apple.security.app-sandbox':True, 'com.apple.security.temporary-exception.shared-preference.read-only':['cn.053x.gogo.settings']})]:
+    ('Finder.entitlements', {'com.apple.security.app-sandbox':True, 'com.apple.security.temporary-exception.shared-preference.read-only':['cn.053x.gogo.settings'], 'com.apple.security.temporary-exception.files.home-relative-path.read-write':['/Library/Application Support/cn.053x.gogo/']})]:
     (config/filename).write_bytes(plistlib.dumps(value,sort_keys=False))
 
 files = []
@@ -49,7 +54,8 @@ for name, directory, product, bundle, kind in [
         srcs.append(build(name,file))
     sources = obj(name+':sources','PBXSourcesBuildPhase',buildActionMask=2147483647,files=srcs,runOnlyForDeploymentPostprocessing=0)
     resources=[]
-    for path, ftype in [('Resources/AppIcon.icns','image.icns'),('Assets/AppIcon.png','image.png')]:
+    for path, ftype in [('Resources/AppIcon.icns','image.icns'),('Assets/AppIcon.png','image.png'),
+                        ('Assets/GogoTemplate.svg','text.xml')]:
         file=ref(path,ftype)
         if file not in files: files.append(file)
         resources.append(build(name,file))

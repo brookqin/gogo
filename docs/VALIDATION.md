@@ -4,7 +4,7 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 
 ## Verified in the current revision
 
-- **20 tests passed:** 9 core tests and 11 application-support tests.
+- **22 tests passed:** 9 core tests and 13 application-support tests.
 - Core coverage: literal Unicode, quote, space, and newline arguments; selection semantics; parent-folder deduplication; configuration round trips; corruption preservation; unsupported versions; invalid and oversized launch requests.
 - App-model coverage: Follow System defaults, preservation of explicit Chinese/English choices, add/edit/disable/remove persistence, drag move semantics in both directions and across multiple indices, rejected invalid moves, failed writes leaving published state unchanged, and corrupt configuration remaining read-only. Preset restoration tests cover iTerm-specific defaults, stable identity, duplicate prevention, preservation of edited/reordered/custom launchers, reload persistence, and failed writes.
 - Actual process test: the launcher starts a controlled executable fixture, which records its received argument and working directory. Shell-like text stays literal and does not execute; the working directory's filesystem identity matches the requested folder.
@@ -22,8 +22,8 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 - Closing the settings window was followed by a process check: no gogo process remained. Computer Use automatically relaunches a closed app when asked to read it again, so the exit check was performed independently.
 - Reproduced the installed application's save failure by enabling Zed. Replaced protected App Group file storage with a versioned JSON snapshot in CFPreferences and a read-only shared-preference entitlement for the Finder extension. On the installed ad-hoc build, enabling Zed succeeds, survives host restart, and appears in the Finder toolbar menu.
 - Shared-preference tests cover complete-snapshot persistence across separate store/model instances and corrupt-data preservation with the UI remaining read-only. The isolated file store now distinguishes a missing file from other read errors.
-- Native Finder toolbar Copy Path wrote the current folder path to the clipboard. The gogo context submenu copied two selected folder paths separated by a newline, verified against the exact selected paths. Menu payloads are retained in the extension and looked up by transported integer tags; passing representedObject did not produce a working copy action in the tested Finder runtime.
-- Copy Path remains independent of launcher enablement and is also built in the configuration-error recovery menu. English and Chinese labels are present. Empty selections disable the command; error/empty cases remain code-reviewed rather than separate native runtime checks.
+- Native Finder Copy Current Path prioritizes selected files/folders in both toolbar and context menus, falling back to the current folder with nothing selected. On the installed build, exact clipboard checks passed for a toolbar-selected README file, two selected folders separated by a newline, the unselected current folder, and a context-selected Assets folder. Both native menus showed “复制当前路径”; the English resource is “Copy Current Path”. Menu payloads are retained in the extension and looked up by transported integer tags; passing representedObject did not produce a working copy action in the tested Finder runtime.
+- Copy Current Path remains independent of launcher enablement and is also built in the configuration-error recovery menu. Only the absence of both selection and target disables the command; configuration-error/no-target cases remain code-reviewed rather than separate native runtime checks.
 
 ## Screenshots
 
@@ -43,8 +43,8 @@ The preview uses a separate configuration file. Its successful saves do not prov
 | --- | --- |
 | Shared settings | Installed ad-hoc host save/relaunch and sandboxed Finder read verified on macOS 27. App Groups are no longer used. Other OS versions and Developer ID builds remain pending. |
 | Finder registration | Ad-hoc local installation in `/Applications/gogo.app` is registered by PlugInKit and visible in System Settings on macOS 27. Original preview signatures omitted the sandbox entitlement; pkd explicitly rejected them. Re-signing with the configured entitlements and registering the installed containing app resolved discovery. |
-| Finder toolbar image | Extension enablement and toolbar-image callbacks observed on macOS 27. A dedicated 18-point image with concrete 18px/36px bitmap representations renders correctly in the toolbar and customization palette after updating the installed app and refreshing Finder. Archive round-trip checks confirm both sizes and image coverage. |
-| Finder menu actions | Toolbar and multi-selection context Copy Path verified against clipboard contents. Individual launcher dispatch still requires end-to-end validation. |
+| Finder toolbar image | Extension enablement and toolbar-image callbacks observed on macOS 27. The approved monochrome SVG is rendered into a dedicated 18-point template image with concrete 18px/36px bitmap representations. The prior color image rendered correctly in the toolbar and customization palette after updating the installed app and refreshing Finder. Archive round-trip checks confirm both sizes and image coverage. |
+| Finder menu actions | Toolbar and multi-selection context Copy Path verified against clipboard contents. Terminal launched from a newly mounted test volume; the shell's working directory matched the selected Chinese/space-containing folder. Other presets remain pending. |
 | Individual terminal/editor integrations | Presets still need cold-start and already-running checks, including iTerm2 Automation approval and denial. The executable fixture does not establish terminal compatibility. |
 | macOS 15.7 and 26 runtime | No matching runtime environment available. |
 | Intel runtime | Universal binaries compiled; no Intel runtime validation. |
@@ -62,3 +62,17 @@ The preview uses a separate configuration file. Its successful saves do not prov
 6. Preserve configuration on read/write failure and unknown versions; retain a working Settings recovery action.
 7. Record actual system versions and screenshots for 15.7, 26, and 27; verify settings and launch-request process lifecycles.
 8. Validate signed/notarized release artifacts again after downloading and installing them independently.
+
+## Finder menu icon update
+
+- Debug and universal Release builds checked after adding the monochrome SVG and menu images.
+- Image archive round-trip checks preserve 16/18-point sizes, 1x/2x bitmap dimensions, and the template flag. Pixel inspection confirms monochrome, nonempty artwork with no clipped edges at all four sizes.
+- All menu symbols resolve using the current SDK/runtime. The installed Finder toolbar menu exposes launcher names without an “Open in” prefix. Native context-menu inspection confirms the parent label “用 gogo 快速打开”, one submenu after refreshing Finder, and unchanged Copy Path behavior verified against the clipboard. A native window screenshot confirms the small monochrome toolbar mark. Menu-open screenshots were unavailable through the UI capture tool, so menu-image sizing/template transport was checked with image inspection rather than a captured live menu.
+- Native dark-appearance and macOS 15.7/26 checks remain pending; template semantics and compile-time deployment targeting do not replace those checks.
+
+## External volumes and launch handoff
+
+- Reproduced missing context menus and disabled toolbar actions on the physical USB APFS volume `/Volumes/ssd`. Registering each mounted volume restored its context submenu and enabled toolbar launchers. Copy Path matched both the current project directory and the selected Assets folder.
+- Mounted a disposable HFS+ disk image after extension startup. Its context menu appeared without restarting Finder. Terminal cold-started from the context submenu, and `lsof` confirmed the child shell's working directory was `/Volumes/gogo Volume Test/Folder with 空格`. The request document was consumed and its host instance exited. A `nobrowse` mount is intentionally excluded by `skipHiddenVolumes`.
+- Finder-to-host argv handoff was replaced because NSWorkspace ignores arguments supplied by sandboxed callers. An explicitly registered request document now reaches the host. Tests cover consume-once behavior and rejection of outside-directory paths, symbolic links, expired documents, and oversized documents.
+- The physical SSD Terminal launch remains pending: process sampling showed the host waiting inside LaunchServices' sandbox-extension issuance call; its request had already been consumed. No successful SSD shell launch is claimed. The test-volume result does not establish permissions or launching behavior for every external drive.

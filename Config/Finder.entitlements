@@ -8,5 +8,9 @@
 	<array>
 		<string>cn.053x.gogo.settings</string>
 	</array>
+	<key>com.apple.security.temporary-exception.files.home-relative-path.read-write</key>
+	<array>
+		<string>/Library/Application Support/cn.053x.gogo/</string>
+	</array>
 </dict>
 </plist>

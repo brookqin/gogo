@@ -32,7 +32,7 @@
 "extension.instructions" = "Enable gogo in macOS extension settings.";
 "extension.manage" = "Manage Extensions…";
 "refresh" = "Refresh Status";
-"finder.context" = "Show gogo submenu in context menus";
+"finder.context" = "Show Quick Open with gogo in context menus";
 "finder.toolbar" = "Show launchers in the toolbar menu";
 "finder.toolbar.help" = "In Finder, choose View → Customize Toolbar to add or remove the gogo button.";
 "finder.behavior.title" = "Which location opens?";
@@ -69,7 +69,6 @@
 "save" = "Save";
 "launch.failed" = "Could not open the launcher";
 "automation.failed" = "Could not control iTerm2. Check Automation permission for gogo and that iTerm2 is installed.";
-"open.in" = "Open in %@";
 "settings.open" = "Settings…";
 "selection.unavailable" = "Current folder unavailable";
 "error.invalidName" = "Enter a launcher name.";
@@ -87,4 +86,5 @@
 "error.missingApplication" = "Application not found. Choose its location in Settings.";
 "error.unavailableSharedContainer" = "gogo could not access its settings. Reinstall gogo and try again.";
 "settings.saveFailed" = "Your settings could not be saved. Your changes have not been applied. Please try again.";
-"path.copy" = "Copy Path";
+"path.copy" = "Copy Current Path";
+"finder.quickOpen" = "Quick Open with gogo";

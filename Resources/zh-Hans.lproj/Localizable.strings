@@ -32,7 +32,7 @@
 "extension.instructions" = "在系统扩展设置中启用 gogo。";
 "extension.manage" = "管理扩展…";
 "refresh" = "刷新状态";
-"finder.context" = "在右键菜单中显示 gogo 子菜单";
+"finder.context" = "在右键菜单中显示“用 gogo 快速打开”";
 "finder.toolbar" = "在工具栏菜单中显示启动项";
 "finder.toolbar.help" = "在 Finder 的“显示 → 自定工具栏”中添加或移除 gogo 按钮。";
 "finder.behavior.title" = "打开哪个位置？";
@@ -69,7 +69,6 @@
 "save" = "保存";
 "launch.failed" = "无法打开启动项";
 "automation.failed" = "无法控制 iTerm2，请检查是否已安装，以及 gogo 的自动化权限。";
-"open.in" = "在 %@ 中打开";
 "settings.open" = "设置…";
 "selection.unavailable" = "无法取得当前文件夹";
 "error.invalidName" = "请填写启动项名称。";
@@ -87,4 +86,5 @@
 "error.missingApplication" = "未找到应用，请在设置中选择其位置。";
 "error.unavailableSharedContainer" = "gogo 无法访问设置，请重新安装后再试。";
 "settings.saveFailed" = "无法保存设置，本次更改尚未生效。请重试。";
-"path.copy" = "拷贝路径";
+"path.copy" = "复制当前路径";
+"finder.quickOpen" = "用 gogo 快速打开";

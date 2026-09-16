@@ -8,28 +8,52 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var model: AppModel?
     private var languageObservation: AnyCancellable?
 
+    private var receivedHandoff = false
+    private var finishedLaunching = false
+    private var pendingRequest: Result<LaunchRequest, Error>?
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        receivedHandoff = true
+        pendingRequest = Result {
+            guard urls.count == 1, let url = urls.first else { throw GogoError.invalidRequest }
+            return try LaunchHandoff.consume(url)
+        }
+        if finishedLaunching { dispatchPendingRequest() }
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
+        finishedLaunching = true
         let args = CommandLine.arguments
         if args.count == 3, args[1] == "--launch-request" {
-            NSApp.setActivationPolicy(.accessory)
-            Task {
-                var language = AppLanguage.system
-                do {
-                    let config = try SharedConfiguration.file().read()
-                    language = config.language
-                    try await LauncherEngine.run(LaunchRequest.decode(args[2]), configuration: config)
-                } catch {
-                    NSApp.activate(ignoringOtherApps: true)
-                    let alert = NSAlert()
-                    alert.messageText = Texts.get("launch.failed", language: language)
-                    alert.informativeText = Texts.error(error, language: language)
-                    alert.runModal()
-                }
-                NSApp.terminate(nil)
-            }
-            return
+            receivedHandoff = true
+            pendingRequest = Result { try LaunchRequest.decode(args[2]) }
         }
-        showSettings(preview: args.contains("--preview"))
+        if receivedHandoff { dispatchPendingRequest() }
+        else if notification.userInfo?[NSApplication.launchIsDefaultUserInfoKey] as? Bool != false {
+            showSettings(preview: args.contains("--preview"))
+        }
+    }
+
+    private func dispatchPendingRequest() {
+        guard let request = pendingRequest else { return }
+        pendingRequest = nil
+        let hasSettingsWindow = window != nil
+        if !hasSettingsWindow { NSApp.setActivationPolicy(.accessory) }
+        Task {
+            var language = AppLanguage.system
+            do {
+                let config = try SharedConfiguration.file().read()
+                language = config.language
+                try await LauncherEngine.run(request.get(), configuration: config)
+            } catch {
+                NSApp.activate(ignoringOtherApps: true)
+                let alert = NSAlert()
+                alert.messageText = Texts.get("launch.failed", language: language)
+                alert.informativeText = Texts.error(error, language: language)
+                alert.runModal()
+            }
+            if window == nil { NSApp.terminate(nil) }
+        }
     }
 
     private func showSettings(preview: Bool) {
@@ -67,7 +91,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         NSApp.mainMenu = menu
     }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        window?.makeKeyAndOrderFront(nil)
+        if let window { window.makeKeyAndOrderFront(nil) }
+        else { showSettings(preview: false) }
         return true
     }
     func applicationDidBecomeActive(_ notification: Notification) { model?.refreshExtension() }
