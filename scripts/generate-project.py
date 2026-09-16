@@ -29,7 +29,12 @@ host_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABL
     UTExportedTypeDeclarations=[dict(UTTypeIdentifier='cn.053x.gogo.launch-request',
         UTTypeConformsTo=['public.data'], UTTypeDescription='gogo Launch Request',
         UTTypeTagSpecification={'public.filename-extension':['gogorequest']})],
-    NSAppleEventsUsageDescription='gogo opens the selected folder in your terminal when you choose its Finder menu item.')
+    NSDesktopFolderUsageDescription='gogo needs access to open items from your Desktop in the apps you choose.',
+    NSDocumentsFolderUsageDescription='gogo needs access to open items from Documents in the apps you choose.',
+    NSDownloadsFolderUsageDescription='gogo needs access to open items from Downloads in the apps you choose.',
+    NSRemovableVolumesUsageDescription='gogo needs access to open items on external drives in the apps you choose.',
+    NSNetworkVolumesUsageDescription='gogo needs access to open items on network volumes in the apps you choose.',
+    NSAppleEventsUsageDescription='gogo needs permission to control iTerm2 to open a terminal in the folder you choose.')
 extension_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABLE_NAME)',
     CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='gogo Finder',
     CFBundleDisplayName='gogo', CFBundlePackageType='XPC!', CFBundleShortVersionString='0.1.0',

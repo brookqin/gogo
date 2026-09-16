@@ -8,8 +8,8 @@ let package = Package(
     targets: [
         .target(name: "GogoCore"),
         .target(name: "GogoAppSupport", dependencies: ["GogoCore"], path: "Sources",
-                exclude: ["GogoCore", "GogoFinder", "Gogo/main.swift", "Gogo/SettingsView.swift"],
-                sources: ["Platform.swift", "Gogo/AppModel.swift", "Gogo/LauncherEngine.swift"]),
+                exclude: ["GogoCore", "GogoFinder", "Gogo/main.swift", "Gogo/SettingsView.swift", "Gogo/PermissionGuide.swift"],
+                sources: ["Platform.swift", "Gogo/AppModel.swift", "Gogo/LauncherEngine.swift", "Gogo/Permissions.swift"]),
         .testTarget(name: "GogoCoreTests", dependencies: ["GogoCore"]),
         .testTarget(name: "GogoAppSupportTests", dependencies: ["GogoAppSupport", "GogoCore"])
     ]

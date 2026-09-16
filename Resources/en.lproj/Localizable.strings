@@ -41,6 +41,7 @@
 "language.system" = "Follow System";
 "language.hint" = "Changes apply immediately.";
 "about.description" = "Open your favorite tools from Finder.";
+"about.version" = "Version %@";
 "about.status" = "Open source";
 "about.github" = "Source Code on GitHub";
 "launcher.edit" = "Edit Launcher";
@@ -88,3 +89,25 @@
 "settings.saveFailed" = "Your settings could not be saved. Your changes have not been applied. Please try again.";
 "path.copy" = "Copy Current Path";
 "finder.quickOpen" = "Quick Open with gogo";
+
+"permissions.title" = "Permissions";
+"permissions.description" = "Manage Finder integration, file access, and iTerm2 Automation.";
+"permissions.preview" = "Permission requests are unavailable in preview. Open the installed gogo app to authorize access.";
+"permissions.finder.title" = "Finder Extension";
+"permissions.finder.description" = "Enable the extension to use gogo in Finder context menus and the toolbar.";
+"permissions.files.title" = "Files and Folders";
+"permissions.files.description" = "macOS asks for permission when you access protected locations. Review or change existing grants in System Settings → Privacy & Security → Files and Folders.";
+"permissions.files.settings" = "Open Settings…";
+"permissions.unchecked" = "Not checked";
+"permissions.authorize" = "Authorize";
+"permissions.waiting" = "Waiting for macOS. Respond to any permission prompt.";
+"permissions.automation.title" = "iTerm2 Automation";
+"permissions.automation.description" = "Needed only for the iTerm2 launch method, to open a terminal in the selected folder. Authorize starts iTerm2 and asks macOS for permission without running a command. If previously denied, enable gogo → iTerm2 in System Settings → Privacy & Security → Automation.";
+"permissions.automation.allowed" = "Authorized";
+"permissions.automation.notRequested" = "Not authorized yet";
+"permissions.automation.denied" = "Denied. Enable access in Automation settings.";
+"permissions.automation.notRunning" = "Start iTerm2 to check; Authorize will start it for you.";
+"permissions.automation.notInstalled" = "Install iTerm2 before authorizing.";
+"permissions.automation.failed" = "Could not check authorization. Try again or open Automation settings.";
+"permissions.automation.settings" = "Automation Settings…";
+"permissions.settings.failed" = "Open System Settings → Privacy & Security, then choose Files and Folders or Automation.";

@@ -4,7 +4,7 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 
 ## Verified in the current revision
 
-- **22 tests passed:** 9 core tests and 13 application-support tests.
+- **26 tests passed:** 9 core tests and 17 application-support tests.
 - Core coverage: literal Unicode, quote, space, and newline arguments; selection semantics; parent-folder deduplication; configuration round trips; corruption preservation; unsupported versions; invalid and oversized launch requests.
 - App-model coverage: Follow System defaults, preservation of explicit Chinese/English choices, add/edit/disable/remove persistence, drag move semantics in both directions and across multiple indices, rejected invalid moves, failed writes leaving published state unchanged, and corrupt configuration remaining read-only. Preset restoration tests cover iTerm-specific defaults, stable identity, duplicate prevention, preservation of edited/reordered/custom launchers, reload persistence, and failed writes.
 - Actual process test: the launcher starts a controlled executable fixture, which records its received argument and working directory. Shell-like text stays literal and does not execute; the working directory's filesystem identity matches the requested folder.
@@ -19,6 +19,7 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 - English → Simplified Chinese → English was verified in preview. The sidebar, settings content, and application Edit menu update without relaunching. Follow System was also selected and persisted through the native picker.
 - Native launcher rows expose no action menu. Clicking a row updates the inspector; a reordered preview list was observed in the UI and configuration file, then retained after relaunch.
 - About, General, and Finder screenshots confirm that the bundle ID, lifecycle explanation, and internal compatibility status are absent from the UI.
+- About reads `CFBundleShortVersionString` from the running app and displays a localized version label. The installed Debug build was verified visually in Chinese as “版本 0.1.0”; the matching English resource is “Version %@”.
 - Closing the settings window was followed by a process check: no gogo process remained. Computer Use automatically relaunches a closed app when asked to read it again, so the exit check was performed independently.
 - Reproduced the installed application's save failure by enabling Zed. Replaced protected App Group file storage with a versioned JSON snapshot in CFPreferences and a read-only shared-preference entitlement for the Finder extension. On the installed ad-hoc build, enabling Zed succeeds, survives host restart, and appears in the Finder toolbar menu.
 - Shared-preference tests cover complete-snapshot persistence across separate store/model instances and corrupt-data preservation with the UI remaining read-only. The isolated file store now distinguishes a missing file from other read errors.
@@ -76,3 +77,10 @@ The preview uses a separate configuration file. Its successful saves do not prov
 - Mounted a disposable HFS+ disk image after extension startup. Its context menu appeared without restarting Finder. Terminal cold-started from the context submenu, and `lsof` confirmed the child shell's working directory was `/Volumes/gogo Volume Test/Folder with 空格`. The request document was consumed and its host instance exited. A `nobrowse` mount is intentionally excluded by `skipHiddenVolumes`.
 - Finder-to-host argv handoff was replaced because NSWorkspace ignores arguments supplied by sandboxed callers. An explicitly registered request document now reaches the host. Tests cover consume-once behavior and rejection of outside-directory paths, symbolic links, expired documents, and oversized documents.
 - The physical SSD Terminal launch remains pending: process sampling showed the host waiting inside LaunchServices' sandbox-extension issuance call; its request had already been consumed. No successful SSD shell launch is claimed. The test-volume result does not establish permissions or launching behavior for every external drive.
+
+## Permission Management
+
+- General has Finder extension, Files and Folders, and iTerm2 Automation cards. File permission details, volume selectors, probes, mount observers, and preauthorization are removed. Files and Folders only links to its System Settings pane; file consent occurs during actual use.
+- Four permission tests cover passive Automation querying, explicit consent requests, preview isolation, duplicate request prevention, and fresh status after revocation/reopening. No permission history is saved or restored.
+- Existing native checks on macOS 27 confirmed aligned, full-width language/permission cards, Follow System language selection, and working Files and Folders / Automation settings links. On the current installed build, a native screenshot confirms the simplified file card matches the Finder card layout and has no detail rows. Clicking Open Settings successfully opened the Files and Folders pane, showing gogo’s OS-managed grants. No grants were changed. All 26 tests and the Debug build passed.
+- Fresh system prompt approval/denial and revocation are not runtime-verified; Automation changes are tested with an injected service. macOS 15.7/26 and Developer ID signing remain pending. This UI change does not resolve the previously recorded SSD LaunchServices issue.

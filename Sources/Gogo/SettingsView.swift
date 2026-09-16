@@ -226,20 +226,25 @@ struct SettingsView: View {
     }
 
     private var general: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text(model.t("general")).font(.title2.weight(.semibold))
-            HStack {
-                Text(model.t("language"))
-                Spacer()
-                Picker(model.t("language"), selection: Binding(get: { model.configuration.language }, set: { language in model.update { $0.language = language } })) {
-                    Text(model.t("language.system")).tag(AppLanguage.system)
-                    Text("简体中文").tag(AppLanguage.zhHans)
-                    Text("English").tag(AppLanguage.en)
-                }.labelsHidden().frame(width: 220)
-            }
-            Text(model.t("language.hint")).font(.callout).foregroundStyle(.secondary)
-            Spacer()
-        }.padding(32).frame(maxWidth: 660, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                Text(model.t("general")).font(.title2.weight(.semibold))
+                GroupBox {
+                    HStack(alignment: .top, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(model.t("language")).fontWeight(.medium)
+                            Text(model.t("language.hint")).foregroundStyle(.secondary)
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                        Picker(model.t("language"), selection: Binding(get: { model.configuration.language }, set: { language in model.update { $0.language = language } })) {
+                            Text(model.t("language.system")).tag(AppLanguage.system)
+                            Text("简体中文").tag(AppLanguage.zhHans)
+                            Text("English").tag(AppLanguage.en)
+                        }.labelsHidden().fixedSize()
+                    }.padding(10)
+                }
+                PermissionGuide(model: model, permissions: model.permissions)
+            }.frame(maxWidth: .infinity, alignment: .leading).padding(32)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
     private var about: some View {
@@ -247,6 +252,9 @@ struct SettingsView: View {
             Spacer(minLength: 20)
             Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()).resizable().frame(width: 130, height: 130)
             Text("gogo").font(.system(size: 32, weight: .bold))
+            if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+                Text(String(format: model.t("about.version"), version)).foregroundStyle(.secondary)
+            }
             Text(model.t("about.description")).font(.title3)
             Text(model.t("about.status")).foregroundStyle(.secondary)
             Link(model.t("about.github"), destination: URL(string: "https://github.com/brookqin/gogo")!)

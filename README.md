@@ -84,6 +84,10 @@ The Finder toolbar and **Quick Open with gogo** context entry use a monochrome g
 
 ## Configuration UI
 
+General includes permission controls for the Finder extension, Files and Folders, and iTerm2 Automation. The Files and Folders card opens System Settings → Privacy & Security → Files and Folders to review or change existing grants. macOS requests file access when it is needed during use; gogo does not list individual folder grants, probe directories, or offer file preauthorization.
+
+Finder extension and iTerm2 Automation status refresh when General opens, gogo becomes active, or Refresh is clicked. The iTerm2 Authorize button starts iTerm2 if needed and requests Automation consent without running a command. The selected terminal/editor may require its own permissions. No permission history is saved or restored; preview mode disables authorization and System Settings actions.
+
 Drag launcher rows to change their order; changes are saved when you drop. Click a row to edit it.
 
 **Add Launcher** is a split button. Click the main segment to create a custom launcher; Save adds it and Cancel discards the draft. The separate arrow lists missing presets. Select one to restore its default settings, enable it, and append it to the list. Existing launchers keep their order and settings. The arrow is disabled when there are no presets to restore. The selected design and blue `go` logo remain the visual baseline. About shows product information without the bundle identifier. Implementation and release-validation details belong in developer documentation.

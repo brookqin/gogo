@@ -13,9 +13,11 @@ final class AppModel: ObservableObject {
     @Published var extensionEnabled = false
     let file: (any ConfigurationStorage)?
     let preview: Bool
+    let permissions: PermissionsModel
 
     init(preview: Bool, configurationFile: (any ConfigurationStorage)? = nil) {
         self.preview = preview
+        permissions = PermissionsModel(preview: preview)
         do {
             let file = try configurationFile ?? (preview
                 ? ConfigurationFile(url: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gogo-preview/configuration.json"))

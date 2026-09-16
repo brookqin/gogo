@@ -32,6 +32,16 @@ On September 16, 2026, the user selected the first concept and explicitly retain
 
 ## API references
 
+### Permission Management
+
+- Files and Folders is a single explanatory card with a System Settings link, matching the Finder extension card layout. It has no per-directory state, volume picker, file probes, mount observers, or preauthorization controls. macOS handles file consent during actual use.
+- Finder and Automation status refresh on entry, app reactivation, and explicit refresh. Automation uses `AEDeterminePermissionToAutomateTarget` with wildcard event class/ID. Refresh passes `askUserIfNeeded: false` and never starts iTerm2. Explicit Automation authorization starts the target if necessary, then requests consent without sending a script or command.
+- No permission history is written or restored. Preview mode performs no system checks. No accessibility or full-disk access requirement is introduced.
+- General uses the same GroupBox treatment for language and permission settings. Its scroll content fills the available width with consistent outer padding.
+- Settings links include a manual navigation path in their descriptions because deep links can vary by OS version.
+
+### Finder and launching
+
 - [Finder Sync](https://developer.apple.com/documentation/findersync)
 - [FIFinderSync](https://developer.apple.com/documentation/findersync/fifindersync-swift.class)
 - [New application instances](https://developer.apple.com/documentation/appkit/nsworkspace/openconfiguration/createsnewapplicationinstance)

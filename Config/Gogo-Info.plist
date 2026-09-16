@@ -61,7 +61,17 @@
 			</dict>
 		</dict>
 	</array>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>gogo needs access to open items from your Desktop in the apps you choose.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>gogo needs access to open items from Documents in the apps you choose.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>gogo needs access to open items from Downloads in the apps you choose.</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>gogo needs access to open items on external drives in the apps you choose.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>gogo needs access to open items on network volumes in the apps you choose.</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>gogo opens the selected folder in your terminal when you choose its Finder menu item.</string>
+	<string>gogo needs permission to control iTerm2 to open a terminal in the folder you choose.</string>
 </dict>
 </plist>
