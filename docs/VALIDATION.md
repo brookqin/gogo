@@ -12,6 +12,8 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 - Unsigned Release universal build passed for both targets with arm64 and x86_64. Deployment target remains 15.7. This is build evidence, not runtime evidence for Intel or earlier macOS versions.
 - English and Chinese localization resources have matching keys. English and Simplified Chinese READMEs are maintained together; developer documentation remains English.
 - New configurations follow the system language. On the Chinese-language development system the native UI opens in Chinese. Explicit saved choices remain unchanged.
+- Zed, Fork, and Typora presets use bundle identifiers verified against the installed apps. All three resolve to their actual icons and paths in the native UI. Fork opens directories (or parent directories of selected files). Individual launch/runtime coverage remains pending below.
+- Both README screenshots were recaptured with a fresh default list: eight presets, no Cursor or custom test entries. Existing saved launcher lists are preserved rather than reset by the preset update.
 - Add Launcher is a regular button and directly opens a new custom-launcher editor, without an intermediate menu.
 - In isolated preview, a custom application path and two argument lines were saved through the UI. The resulting configuration file contained the exact path and argument array.
 - English → Simplified Chinese → English was verified in preview. The sidebar, settings content, and application Edit menu update without relaunching. Follow System was also selected and persisted through the native picker.

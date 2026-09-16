@@ -11,7 +11,7 @@ Scope: the captured standard-size light-appearance settings UI, with the user's 
 - Additional implementation captures: `docs/screenshots/about-en.png`, `general-en.png`, `general-zh.png`, `general-auto.png`, `launchers-zh.png`, and `finder-en.png`, each 1040 × 692 px.
 - The source and current launcher screenshot were opened together in one comparison input. The source is a multi-window board: compare its upper-left settings window, not the whole board, to the implementation.
 - No pixel-for-pixel or CSS comparison is claimed. This is a native AppKit/SwiftUI app. Captures use one output pixel per logical point; the source board has no authoritative point density.
-- Current main state: the Visual Studio Code preset selected in a reordered list. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
+- Current main state: the Zed preset selected in a fresh eight-launcher list, including Fork and Typora. Both README screenshots were recaptured from the native app after updating the presets; no custom test launcher remains. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
 - Full-view evidence covers the sidebar/list/inspector hierarchy, native controls, row grouping, primary Save action, and retained logo. The standalone About and General captures provide readable focused evidence for branding and removed copy; an additional crop was unnecessary.
 
 ## Review findings

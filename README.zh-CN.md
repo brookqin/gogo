@@ -14,7 +14,7 @@ gogo 是独立开发的 Swift macOS 项目，使用场景受 [OpenInTerminal](ht
 
 ## 功能
 
-- 内置 Terminal、iTerm2、Ghostty、Visual Studio Code、Cursor、Xcode 启动预设。
+- 内置 Terminal、iTerm2、Ghostty、Visual Studio Code、Zed、Fork、Typora、Xcode 启动预设。
 - 支持自定义应用或可执行文件路径，逐行填写启动参数。
 - Finder 右键子菜单与工具栏菜单，并保留设置入口。
 - 默认跟随系统语言，也可手动选择 English 或简体中文。

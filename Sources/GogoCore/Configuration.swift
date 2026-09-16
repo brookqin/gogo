@@ -39,7 +39,9 @@ public struct Launcher: Codable, Identifiable, Equatable, Sendable {
         Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000002")!, name: "iTerm2", bundleID: "com.googlecode.iterm2", method: .iTerm, directoriesOnly: true, enabled: false, builtIn: true),
         Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000003")!, name: "Ghostty", bundleID: "com.mitchellh.ghostty", method: .application, arguments: ["--working-directory={directory}"], directoriesOnly: true, enabled: false, builtIn: true),
         Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000004")!, name: "Visual Studio Code", bundleID: "com.microsoft.VSCode", builtIn: true),
-        Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000005")!, name: "Cursor", bundleID: "com.todesktop.230313mzl4w4u92", enabled: false, builtIn: true),
+        Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000007")!, name: "Zed", bundleID: "dev.zed.Zed", enabled: false, builtIn: true),
+        Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000008")!, name: "Fork", bundleID: "com.DanPristupov.Fork", directoriesOnly: true, enabled: false, builtIn: true),
+        Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000009")!, name: "Typora", bundleID: "abnerworks.Typora", enabled: false, builtIn: true),
         Launcher(id: UUID(uuidString: "A0000000-0000-4000-8000-000000000006")!, name: "Xcode", bundleID: "com.apple.dt.Xcode", enabled: false, builtIn: true)
     ]
 

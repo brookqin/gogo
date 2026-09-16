@@ -14,7 +14,7 @@ gogo is an independent Swift macOS project inspired by the workflow of [OpenInTe
 
 ## Features
 
-- Configurable presets for Terminal, iTerm2, Ghostty, Visual Studio Code, Cursor, and Xcode.
+- Configurable presets for Terminal, iTerm2, Ghostty, Visual Studio Code, Zed, Fork, Typora, and Xcode.
 - Custom application or executable paths and one argument per line.
 - Finder context submenu and toolbar menu, with a persistent Settings recovery entry.
 - Drag to reorder launchers; click a row to edit.
