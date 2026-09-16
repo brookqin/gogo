@@ -21,11 +21,9 @@
 "launchers.description" = "Choose the apps shown in Finder context and toolbar menus.";
 "application.notInstalled" = "Application not found";
 "enabled" = "Show in menu";
-"move.up" = "Move Up";
-"move.down" = "Move Down";
 "custom.default" = "My Tool";
 "launcher.add" = "Add Launcher";
-"launchers.hint" = "Use the row menu to reorder items. Built-in presets can be customized.";
+"launchers.hint" = "Drag to reorder. Click a launcher to edit.";
 "launcher.select" = "Select a launcher to configure";
 "extension.enabled" = "Finder extension enabled";
 "extension.disabled" = "Finder extension not enabled";

@@ -13,7 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         if args.count == 3, args[1] == "--launch-request" {
             NSApp.setActivationPolicy(.accessory)
             Task {
-                var language = AppLanguage.en
+                var language = AppLanguage.system
                 do {
                     let config = try SharedConfiguration.file().read()
                     language = config.language

@@ -12,10 +12,11 @@ On September 16, 2026, the user selected the first concept and explicitly retain
 
 ## Product language and content
 
-- New configurations default to English. Simplified Chinese and Follow System remain available; existing saved choices are preserved.
-- Project documentation is written in English. The original Chinese concept image remains an approved historical visual reference.
+- New configurations default to Follow System. Explicit English and Simplified Chinese choices remain available; saved choices are preserved.
+- Both English and Simplified Chinese READMEs are maintained. Developer documentation is written in English. The original Chinese concept image remains an approved historical visual reference.
 - About omits the bundle identifier. Lifecycle, signing, and validation details belong in this documentation, not in the product UI.
 - Add Launcher directly opens a new editor. No intermediate menu or preset submenu.
+- Launcher rows use native drag-and-drop reordering. Clicking a row edits it; there are no per-row action menus.
 - Usage guidance stays where it affects a decision: arguments, working folders, supported selection types, and application launching behavior.
 
 ## Launching and persistence

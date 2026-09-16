@@ -2,16 +2,16 @@
 
 final result: passed
 
-Scope: the captured standard-size light-appearance settings UI, with the user's latest English-default and content-removal changes. This result does not cover Finder extension runtime, dark mode, or every window size.
+Scope: the captured standard-size light-appearance settings UI, with the user's Follow System default, drag ordering, and content-removal changes. This result does not cover Finder extension runtime, dark mode, or every window size.
 
 ## Evidence
 
 - Visual baseline: `docs/design/selected-concept.png`, 1422 × 1106 px, containing a settings window, About, and Finder concepts.
 - Main implementation: `docs/screenshots/launchers-en.png`, 1040 × 692 px including title bar, 1040 × 660 pt content.
-- Additional implementation captures: `docs/screenshots/about-en.png`, `general-en.png`, `general-zh.png`, and `finder-en.png`, each 1040 × 692 px.
+- Additional implementation captures: `docs/screenshots/about-en.png`, `general-en.png`, `general-zh.png`, `general-auto.png`, `launchers-zh.png`, and `finder-en.png`, each 1040 × 692 px.
 - The source and current launcher screenshot were opened together in one comparison input. The source is a multi-window board: compare its upper-left settings window, not the whole board, to the implementation.
 - No pixel-for-pixel or CSS comparison is claimed. This is a native AppKit/SwiftUI app. Captures use one output pixel per logical point; the source board has no authoritative point density.
-- State: custom application editor, a saved application path, and two argument lines. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
+- Current main state: the Visual Studio Code preset selected in a reordered list. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
 - Full-view evidence covers the sidebar/list/inspector hierarchy, native controls, row grouping, primary Save action, and retained logo. The standalone About and General captures provide readable focused evidence for branding and removed copy; an additional crop was unnecessary.
 
 ## Review findings
@@ -22,8 +22,8 @@ No actionable P0/P1/P2 mismatch was found within this captured scope.
 - **Spacing/layout:** the three-column structure, simple separators, row grouping, and inspector remain intact. The implemented window is taller than the reference's settings crop to accommodate an explicit launch-method choice; Save/Cancel remain visible.
 - **Colors:** blue sidebar selection and enabled toggles, neutral native surfaces, and a blue Save button follow the reference. Inactive-window controls naturally turn gray; the final main capture shows the active appearance.
 - **Image quality:** the blue-and-white go icon is retained and clear in the sidebar and About page. Installed apps use their real icons; missing apps use a system placeholder and a truthful availability label.
-- **Copy/content:** English is the initial language. About omits the bundle ID and development-validation copy. General and Finder omit process-lifecycle explanations. Argument and location guidance remains because it affects user choices.
-- **Interactions:** direct add, path/argument editing, save, language switching, and persistence were exercised. A failed real-container save retained the previous visible value. Broader control coverage is tracked in `docs/VALIDATION.md`.
+- **Copy/content:** New settings follow the system language; English and Simplified Chinese can be selected explicitly. About omits the bundle ID and development-validation copy. General and Finder omit process-lifecycle explanations. Argument and location guidance remains because it affects user choices.
+- **Interactions:** direct add, path/argument editing, save, language switching, and persistence were exercised. Native list selection now drives the inspector, and reordered preview rows survive relaunch. Per-row action menus have been removed. A failed real-container save retained the previous visible value. Broader control coverage is tracked in `docs/VALIDATION.md`.
 
 ## Comparison history
 
@@ -34,5 +34,5 @@ No actionable P0/P1/P2 mismatch was found within this captured scope.
 ## Follow-up coverage
 
 - Inspect dark appearance and minimum window size.
-- Exercise UI delete, reorder, and unsaved-draft edge cases.
+- Exercise UI delete, failed-drop, and unsaved-draft edge cases.
 - Capture actual signed Finder menus on every supported OS; settings screenshots are not a substitute.

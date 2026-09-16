@@ -81,44 +81,50 @@ struct SettingsView: View {
                 Text(model.t("launchers")).font(.title2.weight(.semibold))
                 Text(model.t("launchers.description")).font(.callout).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(model.configuration.launchers) { launcher in
-                            HStack(spacing: 12) {
-                                AppIcon(launcher: launcher).frame(width: 30, height: 30)
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(launcher.name).lineLimit(1)
-                                    if Applications.url(for: launcher) == nil {
-                                        Text(model.t("application.notInstalled")).font(.caption).foregroundStyle(.secondary)
+                List(selection: Binding<UUID?>(get: { draft?.id }, set: { id in
+                    if let launcher = model.configuration.launchers.first(where: { $0.id == id }) {
+                        choose(launcher)
+                    }
+                })) {
+                    ForEach(model.configuration.launchers) { launcher in
+                        HStack(spacing: 12) {
+                            AppIcon(launcher: launcher).frame(width: 30, height: 30)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(launcher.name).lineLimit(1)
+                                if Applications.url(for: launcher) == nil {
+                                    Text(model.t("application.notInstalled")).font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
+                            Spacer(minLength: 4)
+                            Toggle(model.t("enabled"), isOn: Binding(get: {
+                                model.configuration.launchers.first { $0.id == launcher.id }?.enabled ?? false
+                            }, set: { enabled in
+                                let saved = model.update { config in
+                                    if let index = config.launchers.firstIndex(where: { $0.id == launcher.id }) {
+                                        config.launchers[index].enabled = enabled
                                     }
                                 }
-                                Spacer(minLength: 4)
-                                Toggle(model.t("enabled"), isOn: Binding(get: {
-                                    model.configuration.launchers.first { $0.id == launcher.id }?.enabled ?? false
-                                }, set: { enabled in
-                                    let saved = model.update { config in
-                                        if let index = config.launchers.firstIndex(where: { $0.id == launcher.id }) {
-                                            config.launchers[index].enabled = enabled
-                                        }
-                                    }
-                                    if saved && draft?.id == launcher.id { draft?.enabled = enabled; original?.enabled = enabled }
-                                })).labelsHidden().toggleStyle(.switch).controlSize(.small).disabled(model.readOnly)
-                                Menu {
-                                    Button(model.t("edit")) { choose(launcher) }
-                                    Button(model.t("move.up")) { move(launcher, offset: -1) }
-                                    Button(model.t("move.down")) { move(launcher, offset: 1) }
-                                } label: { Image(systemName: "ellipsis") }
-                                .menuStyle(.borderlessButton).frame(width: 20)
-                            }
-                            .padding(.horizontal, 12).padding(.vertical, 12)
-                            .background(draft?.id == launcher.id ? Color.primary.opacity(0.07) : .clear)
-                            .contentShape(Rectangle()).onTapGesture { choose(launcher) }
-                            if launcher.id != model.configuration.launchers.last?.id { Divider().padding(.leading, 54) }
+                                if saved && draft?.id == launcher.id { draft?.enabled = enabled; original?.enabled = enabled }
+                            })).labelsHidden().toggleStyle(.switch).controlSize(.small).disabled(model.readOnly)
                         }
+                        .padding(.horizontal, 12).padding(.vertical, 12)
+                        .contentShape(Rectangle())
+                        .tag(launcher.id)
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .moveDisabled(model.readOnly)
                     }
-                    .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 9))
-                    .overlay(RoundedRectangle(cornerRadius: 9).stroke(.primary.opacity(0.08)))
+                    .onMove { source, destination in
+                        _ = model.moveLaunchers(from: source, to: destination)
+                    }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 9))
+                .clipShape(RoundedRectangle(cornerRadius: 9))
+                .overlay(RoundedRectangle(cornerRadius: 9).stroke(.primary.opacity(0.08)))
+                .accessibilityIdentifier("launcher.list")
                 Button {
                     choose(Launcher(name: model.t("custom.default"), method: .application))
                 } label: {
@@ -154,13 +160,6 @@ struct SettingsView: View {
         draft = value
         original = model.configuration.launchers.first { $0.id == value?.id }
     }
-    private func move(_ launcher: Launcher, offset: Int) {
-        model.update { config in
-            guard let index = config.launchers.firstIndex(where: { $0.id == launcher.id }), config.launchers.indices.contains(index + offset) else { return }
-            config.launchers.swapAt(index, index + offset)
-        }
-    }
-
     private var finder: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {

@@ -1,5 +1,7 @@
 # gogo
 
+English · [简体中文](README.zh-CN.md)
+
 <img src="Assets/AppIcon.png" alt="gogo" width="120" />
 
 Open Finder selections in your favorite terminal, editor, or custom program.
@@ -15,7 +17,8 @@ gogo is an independent Swift macOS project inspired by the workflow of [OpenInTe
 - Configurable presets for Terminal, iTerm2, Ghostty, Visual Studio Code, Cursor, and Xcode.
 - Custom application or executable paths and one argument per line.
 - Finder context submenu and toolbar menu, with a persistent Settings recovery entry.
-- English by default, with Simplified Chinese and an explicit system-language option.
+- Drag to reorder launchers; click a row to edit.
+- Automatically follows the system language, with English and Simplified Chinese overrides.
 - Versioned, atomically written shared settings. Unreadable settings are never silently overwritten.
 - On-demand launch handling; the host exits after dispatching the selected application.
 
@@ -58,9 +61,11 @@ User-selected executables may themselves be long-lived. The host's lifecycle doe
 
 ## Configuration UI
 
+Drag launcher rows to change their order; changes are saved when you drop. Click a row to edit it.
+
 Click **Add Launcher** to start editing a new launcher immediately. Save adds it to the list; Cancel discards the new entry. The selected design and blue `go` logo remain the visual baseline. About shows product information without the bundle identifier. Implementation and release-validation details belong in developer documentation.
 
-Existing saved language choices are preserved. New configurations default to English.
+Existing saved language choices are preserved. New configurations default to Follow System.
 
 ## Contributing
 

@@ -15,7 +15,7 @@ enum SharedConfiguration {
 }
 
 enum Texts {
-    static func get(_ key: String, language: AppLanguage = .en) -> String {
+    static func get(_ key: String, language: AppLanguage = .system) -> String {
         let languageCode: String
         switch language {
         case .system:

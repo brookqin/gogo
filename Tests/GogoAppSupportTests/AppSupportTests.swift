@@ -9,16 +9,16 @@ private func temporaryDirectory() throws -> URL {
     return url
 }
 
-@MainActor @Test func newSettingsDefaultToEnglishAndPersistAnExplicitChoice() throws {
+@MainActor @Test func newSettingsFollowSystemAndPersistAnExplicitChoice() throws {
     let directory = try temporaryDirectory()
     defer { try? FileManager.default.removeItem(at: directory) }
     let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
     let model = AppModel(preview: true, configurationFile: file)
-    #expect(model.configuration.language == .en)
+    #expect(model.configuration.language == .system)
     #expect(model.update { $0.language = .zhHans })
     #expect(AppModel(preview: true, configurationFile: file).configuration.language == .zhHans)
-    #expect(model.update { $0.language = .system })
-    #expect(AppModel(preview: true, configurationFile: file).configuration.language == .system)
+    #expect(model.update { $0.language = .en })
+    #expect(AppModel(preview: true, configurationFile: file).configuration.language == .en)
 }
 
 @MainActor @Test func launcherEditingOrderingAndRemovalSurviveReload() throws {
@@ -100,4 +100,32 @@ private func temporaryDirectory() throws -> URL {
     await #expect(throws: GogoError.invalidRequest) {
         try await LauncherEngine.run(LaunchRequest(launcherID: launcher.id, selection: LaunchSelection(paths: ["/tmp"])), configuration: configuration)
     }
+}
+
+@MainActor @Test func dragReorderingMovesRatherThanSwapsAndPersists() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
+    let model = AppModel(preview: true, configurationFile: file)
+    let initial = model.configuration.launchers
+    #expect(model.moveLaunchers(from: IndexSet(integer: 0), to: initial.count))
+    #expect(model.configuration.launchers == Array(initial.dropFirst()) + [initial[0]])
+    #expect(try file.read().launchers == model.configuration.launchers)
+    #expect(model.moveLaunchers(from: IndexSet(integer: initial.count - 1), to: 0))
+    #expect(try file.read().launchers == initial)
+    #expect(model.moveLaunchers(from: IndexSet([0, 2]), to: initial.count))
+    #expect(model.configuration.launchers == [initial[1]] + Array(initial.dropFirst(3)) + [initial[0], initial[2]])
+}
+
+@MainActor @Test func failedOrInvalidDragDoesNotChangeOrder() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
+    let model = AppModel(preview: true, configurationFile: file)
+    let initial = model.configuration
+    #expect(!model.moveLaunchers(from: IndexSet(integer: 999), to: 0))
+    #expect(!model.moveLaunchers(from: IndexSet(integer: 0), to: -1))
+    try FileManager.default.createDirectory(at: file.url, withIntermediateDirectories: true)
+    #expect(!model.moveLaunchers(from: IndexSet(integer: 0), to: 3))
+    #expect(model.configuration == initial)
 }

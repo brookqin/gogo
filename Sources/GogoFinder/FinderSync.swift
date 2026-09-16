@@ -23,7 +23,7 @@ final class FinderSync: FIFinderSync {
             let unavailable = NSMenuItem(title: Texts.get("configuration.unavailable"), action: nil, keyEquivalent: "")
             unavailable.isEnabled = false; menu.addItem(unavailable)
             menu.autoenablesItems = false
-            addSettings(to: menu, language: .en)
+            addSettings(to: menu, language: .system)
             return menu
         }
         let toolbar = menuKind == .toolbarItemMenu

@@ -26,7 +26,7 @@ final class AppModel: ObservableObject {
         } catch {
             file = nil
             readOnly = true
-            self.error = error is GogoError ? Texts.error(error, language: .en) : Texts.get("configuration.readOnly")
+            self.error = error is GogoError ? Texts.error(error, language: .system) : Texts.get("configuration.readOnly")
         }
         refreshExtension()
     }
@@ -54,6 +54,16 @@ final class AppModel: ObservableObject {
         var next = configuration
         if let index = next.launchers.firstIndex(where: { $0.id == launcher.id }) { next.launchers[index] = launcher }
         else { next.launchers.append(launcher) }
+        return save(next)
+    }
+
+    @discardableResult
+    func moveLaunchers(from source: IndexSet, to destination: Int) -> Bool {
+        guard !readOnly, !source.isEmpty, source.allSatisfy(configuration.launchers.indices.contains),
+              (0...configuration.launchers.count).contains(destination) else { return false }
+        var next = configuration
+        next.launchers.move(fromOffsets: source, toOffset: destination)
+        guard next != configuration else { return true }
         return save(next)
     }
 }
