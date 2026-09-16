@@ -33,6 +33,15 @@ Open Finder selections in your favorite terminal, editor, or custom program.
 
 Presets require individual application and OS validation. Their presence does not imply all integrations have passed.
 
+## Installation
+
+Installing a packaged build does not require Xcode or an Apple developer account. gogo is currently not notarized by Apple, so macOS may block the first launch.
+
+1. Download a packaged build from [GitHub Releases](https://github.com/brookqin/gogo/releases), when available. Extract the ZIP or open the DMG, then drag **gogo.app** into **Applications**.
+2. Open gogo. If macOS cannot verify the developer, go to **System Settings → Privacy & Security → Open Anyway**, then confirm **Open**. Only proceed if you trust the download source. See [Apple’s instructions](https://support.apple.com/en-gb/102445).
+3. In gogo, open **General → Finder Extension → Manage Extensions** and enable its Finder extension. The System Settings location may vary by macOS version.
+4. In Finder, choose **View → Customize Toolbar** and add the gogo button. macOS requests file access when needed during use.
+
 ## Build
 
 Requires Xcode and system Python 3; no third-party runtime dependencies. Initially compiled using Xcode 27.
@@ -52,11 +61,7 @@ codesign --force --sign - --entitlements Config/Gogo.entitlements .build/xcode/B
 open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 ```
 
-Preview configuration lives under `gogo-preview/configuration.json` in the system temporary directory and does not configure the Finder extension. Ad-hoc signing is not a distribution workflow.
-
-For distribution, configure the same development team and valid signing for both Xcode targets. App Group provisioning is not required. Host bundle ID: `cn.053x.gogo`; extension: `cn.053x.gogo.finder`. Signing settings may also be passed to the build script, for example `DEVELOPMENT_TEAM=YOUR_TEAM CODE_SIGN_IDENTITY="Apple Development"`.
-
-After installation, open gogo once and use **Finder → Manage Extensions**. Finder toolbar customization controls the button's placement. Extension settings entry points must be checked on each supported macOS version.
+Preview configuration lives under `gogo-preview/configuration.json` in the system temporary directory and does not configure the Finder extension.
 
 ## Extension not listed
 

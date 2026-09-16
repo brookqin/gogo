@@ -33,6 +33,15 @@
 
 各终端和编辑器仍需独立验证；提供预设不代表该应用已在全部目标系统上通过测试。
 
+## 安装
+
+安装打包后的应用无需 Xcode 或 Apple 开发者账号。gogo 目前未经 Apple 公证，首次打开时可能被 macOS 拦截。
+
+1. 在 [GitHub Releases](https://github.com/brookqin/gogo/releases) 有安装包发布后下载，解压 ZIP 或打开 DMG，将 **gogo.app** 拖入**应用程序**。
+2. 打开 gogo。若 macOS 提示无法验证开发者，前往**系统设置 → 隐私与安全性 → 仍要打开**，再确认**打开**。仅在信任下载来源时继续，具体可参考 [Apple 官方说明](https://support.apple.com/zh-cn/102445)。
+3. 在 gogo 中进入**通用 → Finder 扩展 → 管理扩展**，启用 gogo 的 Finder 扩展。不同 macOS 版本的系统设置位置可能有所不同。
+4. 在 Finder 中选择**显示 → 自定工具栏**，添加 gogo 按钮。使用过程中，文件访问权限由 macOS 按需请求。
+
 ## 构建
 
 需要 Xcode 和系统 Python 3，无第三方运行时依赖。当前使用 Xcode 27 构建验证。
@@ -52,11 +61,7 @@ codesign --force --sign - --entitlements Config/Gogo.entitlements .build/xcode/B
 open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 ```
 
-预览配置位于系统临时目录下的 `gogo-preview/configuration.json`，不会配置 Finder 扩展。Ad-hoc 签名不能替代正式发行签名。
-
-正式分发时，需为两个 Xcode target 配置同一开发团队与有效签名。无需配置 App Group provisioning。主程序 bundle ID 为 `cn.053x.gogo`，扩展为 `cn.053x.gogo.finder`。也可向构建脚本传入 `DEVELOPMENT_TEAM=你的团队ID CODE_SIGN_IDENTITY="Apple Development"`。
-
-安装后先打开一次 gogo，再进入 **Finder → 管理扩展**。通过 Finder 的“显示 → 自定工具栏”调整按钮位置；扩展设置入口需要在各目标系统上验证。
+预览配置位于系统临时目录下的 `gogo-preview/configuration.json`，不会配置 Finder 扩展。
 
 ## 扩展未出现在系统设置中
 
