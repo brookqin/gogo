@@ -68,6 +68,14 @@ The preview uses a separate configuration file. Its successful saves do not prov
 - All menu symbols resolve using the current SDK/runtime. The installed Finder toolbar menu exposes launcher names without an “Open in” prefix. Native context-menu inspection confirms the parent label “用 gogo 快速打开”, one submenu after refreshing Finder, and unchanged Copy Path behavior verified against the clipboard. A native window screenshot confirms the small monochrome toolbar mark. Menu-open screenshots were unavailable through the UI capture tool, so menu-image sizing/template transport was checked with image inspection rather than a captured live menu.
 - Native dark-appearance and macOS 15.7/26 checks remain pending; template semantics and compile-time deployment targeting do not replace those checks.
 
+## macOS 15 menu separator fallback
+
+- A user screenshot from macOS 15.7 shows the two native separators as blank, full-height rows in the Finder toolbar menu. The implementation already used `NSMenuItem.separator()`. A [similar Finder Sync report](https://developer.apple.com/forums/thread/836136) describes the same behavior; it has no Apple-confirmed resolution.
+- A follow-up review of Apple's Finder Sync guide, the separator API documentation, and the forum report found no documented native compatibility fix. The open-source [MediaInfo Finder extension](https://github.com/sbarex/MediaInfo/blob/master/MediaInfo%20Finder%20Extension/FinderSync.swift#L432-L508) also replaces separators with horizontal-rule characters because Finder turns them into disabled empty menu items. This is corroborating implementation evidence, not an Apple guarantee about all OS versions.
+- On macOS 15, both the toolbar and context submenu now use disabled plain-text horizontal rules consisting of five `─` characters, as requested. The configuration-error menu uses the same helper. Empty menus do not receive a leading divider. macOS 26 and later retain native separators.
+- This is a visual fallback, not restoration of native separator semantics: Finder still controls the row height, and the horizontal rule has a fixed text width. No custom menu view, action, or launcher payload is attached to the divider.
+- The unsigned Debug build passed for the host and extension on macOS 27, for arm64 and x86_64 with deployment target 15.7. The fallback still needs actual macOS 15.7 toolbar/context-menu verification in light and dark appearance and with VoiceOver. Build success does not establish its Finder rendering on macOS 15.7. No release or installed application was changed.
+
 ## External volumes and launch handoff
 
 - Reproduced missing context menus and disabled toolbar actions on the physical USB APFS volume `/Volumes/ssd`. Registering each mounted volume restored its context submenu and enabled toolbar launchers. Copy Path matched both the current project directory and the selected Assets folder.

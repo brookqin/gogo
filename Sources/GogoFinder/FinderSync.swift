@@ -115,7 +115,7 @@ final class FinderSync: FIFinderSync {
     }
 
     private func addCopyPath(to menu: NSMenu, selected: [URL], language: AppLanguage, kind: FIMenuKind) {
-        if !menu.items.isEmpty { menu.addItem(.separator()) }
+        addSeparator(to: menu)
         let item = NSMenuItem(title: Texts.get("path.copy", language: language), action: #selector(copyPath(_:)), keyEquivalent: "")
         item.image = FinderIcons.symbol("doc.on.doc")
         // Snapshot the menu's context; selection may change before the action arrives.
@@ -132,11 +132,27 @@ final class FinderSync: FIFinderSync {
     }
 
     private func addSettings(to menu: NSMenu, language: AppLanguage) {
-        if !menu.items.isEmpty { menu.addItem(.separator()) }
+        addSeparator(to: menu)
         let item = NSMenuItem(title: Texts.get("settings.open", language: language), action: #selector(settings(_:)), keyEquivalent: "")
         item.image = FinderIcons.symbol("gearshape")
         menu.addItem(item)
     }
+
+    private func addSeparator(to menu: NSMenu) {
+        guard !menu.items.isEmpty else { return }
+        if #available(macOS 26, *) {
+            menu.addItem(.separator())
+        } else {
+            // Finder on macOS 15 renders transported native separators as
+            // blank, full-height rows. A disabled plain title survives that
+            // transport; custom views and attributed titles cannot be relied on.
+            // This fallback keeps the row height, but makes the grouping visible.
+            let divider = NSMenuItem(title: String(repeating: "─", count: 5), action: nil, keyEquivalent: "")
+            divider.isEnabled = false
+            menu.addItem(divider)
+        }
+    }
+
     private var hostURL: URL {
         // gogo.app/Contents/PlugIns/GogoFinder.appex -> gogo.app
         Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
