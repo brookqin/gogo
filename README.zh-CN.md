@@ -38,8 +38,8 @@ swift test
 如需使用独立配置预览设置界面：
 
 ```sh
-codesign --force --sign - .build/xcode/Build/Products/Debug/gogo.app/Contents/PlugIns/GogoFinder.appex
-codesign --force --sign - .build/xcode/Build/Products/Debug/gogo.app
+codesign --force --sign - --entitlements Config/Finder.entitlements .build/xcode/Build/Products/Debug/gogo.app/Contents/PlugIns/GogoFinder.appex
+codesign --force --sign - --entitlements Config/Gogo.entitlements .build/xcode/Build/Products/Debug/gogo.app
 open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 ```
 
@@ -48,6 +48,21 @@ open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 实际安装 Finder 扩展时，需为两个 Xcode target 配置同一开发团队、有效签名与 provisioning，并使用 App Group `group.cn.053x.gogo`。主程序 bundle ID 为 `cn.053x.gogo`，扩展为 `cn.053x.gogo.finder`。也可向构建脚本传入 `DEVELOPMENT_TEAM=你的团队ID CODE_SIGN_IDENTITY="Apple Development"`。
 
 安装后先打开一次 gogo，再进入 **Finder → 管理扩展**。通过 Finder 的“显示 → 自定工具栏”调整按钮位置；扩展设置入口需要在各目标系统上验证。
+
+## 扩展未出现在系统设置中
+
+设置界面能打开，不代表 Finder 扩展已经注册。签名时必须保留扩展的沙盒声明：仅使用 `codesign --sign -` 重新签名会移除该声明，PlugInKit 会以 `plug-ins must be sandboxed` 为由拒绝扩展。
+
+将应用安装到 `/Applications` 并打开安装后的副本，再前往**系统设置 → 通用 → 登录项与扩展 → 按 App → gogo**。当前测试的 macOS 27 将 Finder Sync 标为“文件提供程序”。扩展是否启用由用户单独选择。
+
+本地开发时可检查注册状态：
+
+```sh
+pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
+pluginkit -m -A -D -v -i cn.053x.gogo.finder
+```
+
+Ad-hoc 签名下注册成功、设置中可见，不代表 App Group 访问和 Finder 启动流程已通过验证。集成与发行测试仍需正确的签名和 provisioning。
 
 ## 启动参数
 

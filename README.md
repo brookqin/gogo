@@ -38,8 +38,8 @@ The script generates `gogo.xcodeproj` and builds `.build/xcode/Build/Products/De
 For isolated settings UI preview:
 
 ```sh
-codesign --force --sign - .build/xcode/Build/Products/Debug/gogo.app/Contents/PlugIns/GogoFinder.appex
-codesign --force --sign - .build/xcode/Build/Products/Debug/gogo.app
+codesign --force --sign - --entitlements Config/Finder.entitlements .build/xcode/Build/Products/Debug/gogo.app/Contents/PlugIns/GogoFinder.appex
+codesign --force --sign - --entitlements Config/Gogo.entitlements .build/xcode/Build/Products/Debug/gogo.app
 open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 ```
 
@@ -48,6 +48,21 @@ Preview configuration lives under `gogo-preview/configuration.json` in the syste
 For real Finder installation, configure the same development team and valid signing/provisioning for both Xcode targets and App Group `group.cn.053x.gogo`. Host bundle ID: `cn.053x.gogo`; extension: `cn.053x.gogo.finder`. Signing settings may also be passed to the build script, for example `DEVELOPMENT_TEAM=YOUR_TEAM CODE_SIGN_IDENTITY="Apple Development"`.
 
 After installation, open gogo once and use **Finder → Manage Extensions**. Finder toolbar customization controls the button's placement. Extension settings entry points must be checked on each supported macOS version.
+
+## Extension not listed
+
+A settings preview does not establish Finder registration. Keep the extension's sandbox entitlement when signing: re-signing with only `codesign --sign -` removes it, and PlugInKit rejects the extension with `plug-ins must be sandboxed`.
+
+Install the app in `/Applications`, open the installed copy, then check **System Settings → General → Login Items & Extensions → By App → gogo**. On the tested macOS 27 build, Finder Sync appears under the File Providers label. Enablement is a separate user choice.
+
+For a local development registration check:
+
+```sh
+pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
+pluginkit -m -A -D -v -i cn.053x.gogo.finder
+```
+
+Ad-hoc registration and a visible settings entry do not establish App Group access or a working Finder launch flow. Use appropriate signing/provisioning for integration and distribution testing.
 
 ## Arguments
 
