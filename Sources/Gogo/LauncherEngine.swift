@@ -1,4 +1,7 @@
 import AppKit
+#if SWIFT_PACKAGE
+import GogoCore
+#endif
 
 @MainActor
 enum LauncherEngine {

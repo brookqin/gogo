@@ -1,10 +1,13 @@
 # gogo
 
-- 默认使用中文沟通。
-- 原生 Swift macOS 项目；最低版本 15.7，目标覆盖 macOS 26、27。
-- 主程序只提供配置与关于信息，无常驻菜单栏图标。Finder 扩展由系统管理。
-- UI 以 `docs/design/selected-concept.png` 为依据；保留蓝底白色 go 图标。
-- 共享配置必须版本化、原子写入；读取失败不得静默覆盖原文件。
-- 参数按数组传递，禁止把用户路径拼接为 shell 命令。
-- 中英文本资源同步更新。不要将编译成功描述为 Finder 实机验收完成。
-- 不提交证书、私钥、个人签名配置、构建产物或用户配置。
+- Communicate with the user in Chinese unless requested otherwise. Write project documentation in English.
+- Native Swift macOS app; deployment target 15.7, intended coverage macOS 15.7, 26, and 27.
+- Default new configurations to English; keep Simplified Chinese and Follow System available. Preserve saved language choices.
+- The host provides settings and About only, without a resident menu bar icon. macOS manages the Finder extension.
+- Follow `docs/design/selected-concept.png` and retain the blue icon with white italic `go`.
+- Keep implementation details out of the UI: no bundle ID in About, process-lifecycle notes, signing architecture, or internal verification status. Explain behavior only when it helps the user make a choice.
+- Add Launcher opens a new editor directly, without a submenu.
+- Version shared configuration and write it atomically. Never overwrite a file that failed to load.
+- Pass arguments as arrays; never interpolate user paths into shell source.
+- Update English and Chinese resources together. Compilation does not establish Finder runtime compatibility.
+- Do not commit credentials, certificates, private keys, personal signing settings, build artifacts, or user configuration.

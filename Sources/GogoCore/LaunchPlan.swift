@@ -18,7 +18,10 @@ public struct LaunchRequest: Codable, Sendable {
         self.launcherID = launcherID; self.selection = selection
     }
     public func encoded() throws -> String {
-        try JSONEncoder().encode(self).base64EncodedString()
+        _ = try selection.urls()
+        let value = try JSONEncoder().encode(self).base64EncodedString()
+        guard value.utf8.count <= 128 * 1024 else { throw GogoError.invalidRequest }
+        return value
     }
     public static func decode(_ value: String) throws -> LaunchRequest {
         guard value.utf8.count <= 128 * 1024, let data = Data(base64Encoded: value) else { throw GogoError.invalidRequest }

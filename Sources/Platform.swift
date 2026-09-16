@@ -1,5 +1,8 @@
 import AppKit
 import Foundation
+#if SWIFT_PACKAGE
+import GogoCore
+#endif
 
 enum SharedConfiguration {
     static let groupID = "group.cn.053x.gogo"
@@ -12,7 +15,7 @@ enum SharedConfiguration {
 }
 
 enum Texts {
-    static func get(_ key: String, language: AppLanguage = .system) -> String {
+    static func get(_ key: String, language: AppLanguage = .en) -> String {
         let languageCode: String
         switch language {
         case .system:
@@ -24,6 +27,7 @@ enum Texts {
         return bundle.localizedString(forKey: key, value: key, table: nil)
     }
     static func error(_ error: Error, language: AppLanguage) -> String {
+        if error is DecodingError { return get("configuration.readOnly", language: language) }
         if let known = error as? GogoError { return get("error." + known.rawValue, language: language) }
         return error.localizedDescription
     }

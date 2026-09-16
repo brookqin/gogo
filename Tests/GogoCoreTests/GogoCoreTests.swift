@@ -64,3 +64,10 @@ import Testing
 }
 
 @Test func defaultPresetsValidate() throws { try Configuration().validate() }
+
+@Test func oversizedRequestsAreRejectedBeforeDispatch() {
+    let request = LaunchRequest(launcherID: UUID(), selection: LaunchSelection(paths: (0..<20).map {
+        "/tmp/\($0)/" + String(repeating: "x", count: 8000)
+    }))
+    #expect(throws: GogoError.invalidRequest) { try request.encoded() }
+}

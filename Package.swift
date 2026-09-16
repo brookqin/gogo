@@ -7,6 +7,10 @@ let package = Package(
     products: [.library(name: "GogoCore", targets: ["GogoCore"])],
     targets: [
         .target(name: "GogoCore"),
-        .testTarget(name: "GogoCoreTests", dependencies: ["GogoCore"])
+        .target(name: "GogoAppSupport", dependencies: ["GogoCore"], path: "Sources",
+                exclude: ["GogoCore", "GogoFinder", "Gogo/main.swift", "Gogo/SettingsView.swift"],
+                sources: ["Platform.swift", "Gogo/AppModel.swift", "Gogo/LauncherEngine.swift"]),
+        .testTarget(name: "GogoCoreTests", dependencies: ["GogoCore"]),
+        .testTarget(name: "GogoAppSupportTests", dependencies: ["GogoAppSupport", "GogoCore"])
     ]
 )

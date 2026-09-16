@@ -1,6 +1,9 @@
 import AppKit
 import SwiftUI
 import FinderSync
+#if SWIFT_PACKAGE
+import GogoCore
+#endif
 
 @MainActor
 final class AppModel: ObservableObject {
@@ -11,19 +14,19 @@ final class AppModel: ObservableObject {
     let file: ConfigurationFile?
     let preview: Bool
 
-    init(preview: Bool) {
+    init(preview: Bool, configurationFile: ConfigurationFile? = nil) {
         self.preview = preview
         do {
-            let file = try preview
+            let file = try configurationFile ?? (preview
                 ? ConfigurationFile(url: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("gogo-preview/configuration.json"))
-                : SharedConfiguration.file()
+                : SharedConfiguration.file())
             let loaded = try file.read()
             self.file = file
             configuration = loaded
         } catch {
             file = nil
             readOnly = true
-            self.error = Texts.error(error, language: .system)
+            self.error = error is GogoError ? Texts.error(error, language: .en) : Texts.get("configuration.readOnly")
         }
         refreshExtension()
     }
@@ -37,14 +40,15 @@ final class AppModel: ObservableObject {
             configuration = next
             return true
         } catch {
-            self.error = Texts.error(error, language: configuration.language)
+            self.error = error is GogoError ? Texts.error(error, language: configuration.language) : t("settings.saveFailed")
             return false
         }
     }
-    func update(_ body: (inout Configuration) -> Void) {
+    @discardableResult
+    func update(_ body: (inout Configuration) -> Void) -> Bool {
         var next = configuration
         body(&next)
-        _ = save(next)
+        return save(next)
     }
     func saveLauncher(_ launcher: Launcher) -> Bool {
         var next = configuration

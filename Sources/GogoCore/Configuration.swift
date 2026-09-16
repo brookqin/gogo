@@ -63,7 +63,7 @@ public struct Launcher: Codable, Identifiable, Equatable, Sendable {
 
 public struct Configuration: Codable, Equatable, Sendable {
     public var version = 1
-    public var language: AppLanguage = .system
+    public var language: AppLanguage = .en
     public var showContextMenu = true
     public var showToolbarLaunchers = true
     public var launchers: [Launcher] = Launcher.presets

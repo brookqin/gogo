@@ -17,10 +17,6 @@ struct SettingsView: View {
             sidebar
             Divider()
             VStack(spacing: 0) {
-                if model.preview {
-                    Text(model.t("preview.notice")).font(.caption).foregroundStyle(.secondary)
-                        .padding(8).frame(maxWidth: .infinity).background(.yellow.opacity(0.10))
-                }
                 if model.readOnly {
                     Label(model.t("configuration.readOnly"), systemImage: "exclamationmark.triangle")
                         .font(.callout).foregroundStyle(.orange).padding()
@@ -44,8 +40,9 @@ struct SettingsView: View {
         .confirmationDialog(model.t("delete.title"), isPresented: $delete) {
             Button(model.t("delete"), role: .destructive) {
                 if let id = draft?.id {
-                    model.update { $0.launchers.removeAll { $0.id == id } }
-                    draft = nil; original = nil
+                    if model.update({ $0.launchers.removeAll { $0.id == id } }) {
+                        draft = nil; original = nil
+                    }
                 }
             }
             Button(model.t("cancel"), role: .cancel) {}
@@ -99,12 +96,12 @@ struct SettingsView: View {
                                 Toggle(model.t("enabled"), isOn: Binding(get: {
                                     model.configuration.launchers.first { $0.id == launcher.id }?.enabled ?? false
                                 }, set: { enabled in
-                                    model.update { config in
+                                    let saved = model.update { config in
                                         if let index = config.launchers.firstIndex(where: { $0.id == launcher.id }) {
                                             config.launchers[index].enabled = enabled
                                         }
                                     }
-                                    if draft?.id == launcher.id { draft?.enabled = enabled; original?.enabled = enabled }
+                                    if saved && draft?.id == launcher.id { draft?.enabled = enabled; original?.enabled = enabled }
                                 })).labelsHidden().toggleStyle(.switch).controlSize(.small).disabled(model.readOnly)
                                 Menu {
                                     Button(model.t("edit")) { choose(launcher) }
@@ -122,18 +119,11 @@ struct SettingsView: View {
                     .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 9))
                     .overlay(RoundedRectangle(cornerRadius: 9).stroke(.primary.opacity(0.08)))
                 }
-                Menu {
-                    Button(model.t("custom.default")) { choose(Launcher(name: model.t("custom.default"), method: .application)) }
-                    let missing = Launcher.presets.filter { preset in !model.configuration.launchers.contains { $0.id == preset.id } }
-                    if !missing.isEmpty {
-                        Divider()
-                        ForEach(missing) { preset in
-                            Button(preset.name) { model.update { $0.launchers.append(preset) }; choose(preset) }
-                        }
-                    }
+                Button {
+                    choose(Launcher(name: model.t("custom.default"), method: .application))
                 } label: {
                     Label(model.t("launcher.add"), systemImage: "plus")
-                }.controlSize(.large).disabled(model.readOnly)
+                }.controlSize(.large).disabled(model.readOnly).accessibilityIdentifier("launcher.add")
                 Text(model.t("launchers.hint")).font(.caption).foregroundStyle(.secondary)
                 Spacer(minLength: 0)
             }.padding(24).frame(minWidth: 340, idealWidth: 400, maxWidth: .infinity)
@@ -156,6 +146,7 @@ struct SettingsView: View {
     }
 
     private func choose(_ value: Launcher?) {
+        guard value?.id != draft?.id else { return }
         if draft != original { pending = value; discard = true }
         else { setDraft(value) }
     }
@@ -191,7 +182,6 @@ struct SettingsView: View {
                 Divider()
                 Text(model.t("finder.behavior.title")).font(.headline)
                 Text(model.t("finder.behavior")).foregroundStyle(.secondary).lineSpacing(6)
-                Text(model.t("finder.lifecycle")).font(.callout).foregroundStyle(.secondary)
                 Spacer()
             }.padding(32).frame(maxWidth: 660, alignment: .leading)
         }.frame(maxWidth: .infinity, alignment: .leading)
@@ -214,8 +204,6 @@ struct SettingsView: View {
                 }.labelsHidden().frame(width: 220)
             }
             Text(model.t("language.hint")).font(.callout).foregroundStyle(.secondary)
-            Divider()
-            Text(model.t("general.lifecycle")).foregroundStyle(.secondary)
             Spacer()
         }.padding(32).frame(maxWidth: 660, alignment: .leading).frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -225,11 +213,9 @@ struct SettingsView: View {
             Spacer(minLength: 20)
             Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()).resizable().frame(width: 130, height: 130)
             Text("gogo").font(.system(size: 32, weight: .bold))
-            Text("cn.053x.gogo").foregroundStyle(.secondary).textSelection(.enabled)
             Text(model.t("about.description")).font(.title3)
             Text(model.t("about.status")).foregroundStyle(.secondary)
             Link(model.t("about.github"), destination: URL(string: "https://github.com/brookqin/gogo")!)
-            Text(model.t("about.compatibility")).font(.caption).foregroundStyle(.secondary)
             Spacer()
         }.frame(maxWidth: .infinity).padding(32)
     }
@@ -263,7 +249,6 @@ private struct LauncherInspector: View {
                 field("program") {
                     HStack {
                         TextField(model.t("program.placeholder"), text: $launcher.program)
-                            .help(launcher.bundleID ?? "")
                         Button(model.t("choose")) { chooseProgram() }
                     }
                     if launcher.program.isEmpty, let url = Applications.url(for: launcher) {

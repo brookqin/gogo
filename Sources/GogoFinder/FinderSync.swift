@@ -22,7 +22,8 @@ final class FinderSync: FIFinderSync {
         catch {
             let unavailable = NSMenuItem(title: Texts.get("configuration.unavailable"), action: nil, keyEquivalent: "")
             unavailable.isEnabled = false; menu.addItem(unavailable)
-            addSettings(to: menu, language: .system)
+            menu.autoenablesItems = false
+            addSettings(to: menu, language: .en)
             return menu
         }
         let toolbar = menuKind == .toolbarItemMenu
@@ -42,9 +43,10 @@ final class FinderSync: FIFinderSync {
                 let item = NSMenuItem(title: title, action: #selector(launch(_:)), keyEquivalent: "")
                 item.target = self
                 let selection = LaunchSelection(paths: selected.map(\.path))
-                item.representedObject = LaunchRequest(launcherID: launcher.id, selection: selection)
+                let request = LaunchRequest(launcherID: launcher.id, selection: selection)
+                item.representedObject = request
                 // Availability and capabilities are reevaluated when the user opens the menu.
-                item.isEnabled = !selected.isEmpty && (try? LaunchPlan.make(launcher: launcher, selection: selection, isDirectory: Applications.isDirectory)) != nil
+                item.isEnabled = (try? request.encoded()) != nil && (try? LaunchPlan.make(launcher: launcher, selection: selection, isDirectory: Applications.isDirectory)) != nil
                 content.addItem(item)
             }
             if selected.isEmpty {

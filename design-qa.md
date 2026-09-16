@@ -1,29 +1,38 @@
-# gogo 原生 UI 对照记录
+# Native settings UI review
 
-final result: blocked
+final result: passed
 
-- 视觉源：`docs/design/selected-concept.png`（1422 × 1106 设计画板，包含主窗口、关于和 Finder 草图）。
-- 实现：`.build/xcode/Build/Products/Debug/gogo.app --preview`；原生内容窗口 1040 × 660 pt，最小窗口 980 × 620 pt。
-- 状态：中文启动项页面，观察到 Terminal 与 iTerm2 编辑面板。
-- 实现截图：未取得。Computer Use 截图和状态操作多次返回 `timeoutReached`；重新连接后可读取无障碍树，但仍未完成截图。
-- 密度归一化：尚未进行。原始画板含多窗口，最终应仅裁取主窗口并与原生窗口相同状态对照。
-- 完整画面比较：未完成，不能用无障碍树代替截图。
-- 局部比较：字体、间距、颜色、图标边缘和内容均待截图验证。
+Scope: the captured standard-size light-appearance settings UI, with the user's latest English-default and content-removal changes. This result does not cover Finder extension runtime, dark mode, or every window size.
 
-## 已知实现差异
+## Evidence
 
-- 使用真实安装应用的图标；未安装应用显示系统占位图标与“未找到应用”，不采用草图中的虚构检测状态。
-- 为说明 macOS 参数语义增加启动方式选择；工作目录只在可执行文件模式显示。
-- 预览模式顶部提示使用隔离配置，不属于正式产品窗口。
-- 无障碍树可识别中文导航、开关、路径字段、启动方式、保存与取消。完整编辑/保存和中英切换尚未验收。
+- Visual baseline: `docs/design/selected-concept.png`, 1422 × 1106 px, containing a settings window, About, and Finder concepts.
+- Main implementation: `docs/screenshots/launchers-en.png`, 1040 × 692 px including title bar, 1040 × 660 pt content.
+- Additional implementation captures: `docs/screenshots/about-en.png`, `general-en.png`, `general-zh.png`, and `finder-en.png`, each 1040 × 692 px.
+- The source and current launcher screenshot were opened together in one comparison input. The source is a multi-window board: compare its upper-left settings window, not the whole board, to the implementation.
+- No pixel-for-pixel or CSS comparison is claimed. This is a native AppKit/SwiftUI app. Captures use one output pixel per logical point; the source board has no authoritative point density.
+- State: custom application editor, a saved application path, and two argument lines. The English labels and removed implementation details are intentional user-requested changes to the Chinese reference.
+- Full-view evidence covers the sidebar/list/inspector hierarchy, native controls, row grouping, primary Save action, and retained logo. The standalone About and General captures provide readable focused evidence for branding and removed copy; an additional crop was unnecessary.
 
-## 必须补充的视觉检查
+## Review findings
 
-1. 字体：核对系统字体、中英文字号、换行和表单标签。
-2. 布局：同一自定义程序编辑状态下核对三栏比例、24 pt 内边距、底部按钮可见性。
-3. 颜色：浅色/深色系统外观、选择态对比度。
-4. 图标：核对蓝底白色 go 的透明边缘、ICNS 缩放与关于页面清晰度。
-5. 内容：核对中英语言切换和自定义参数帮助文本。
-6. 获得同状态源图/运行图的并列证据后，修复 P0/P1/P2 并重新记录对照结果。
+No actionable P0/P1/P2 mismatch was found within this captured scope.
 
-当前没有足够视觉证据判定通过；这与 Finder 签名/运行验收是两个独立缺口。
+- **Typography:** system fonts retain the reference's clear heading, field-label, and helper-text hierarchy. English and Chinese settings labels are readable. No clipped form label or hidden primary control was visible.
+- **Spacing/layout:** the three-column structure, simple separators, row grouping, and inspector remain intact. The implemented window is taller than the reference's settings crop to accommodate an explicit launch-method choice; Save/Cancel remain visible.
+- **Colors:** blue sidebar selection and enabled toggles, neutral native surfaces, and a blue Save button follow the reference. Inactive-window controls naturally turn gray; the final main capture shows the active appearance.
+- **Image quality:** the blue-and-white go icon is retained and clear in the sidebar and About page. Installed apps use their real icons; missing apps use a system placeholder and a truthful availability label.
+- **Copy/content:** English is the initial language. About omits the bundle ID and development-validation copy. General and Finder omit process-lifecycle explanations. Argument and location guidance remains because it affects user choices.
+- **Interactions:** direct add, path/argument editing, save, language switching, and persistence were exercised. A failed real-container save retained the previous visible value. Broader control coverage is tracked in `docs/VALIDATION.md`.
+
+## Comparison history
+
+1. Initial pass: blocked because Computer Use could not obtain screenshots reliably.
+2. Current pass: native captures succeeded. The user's requested copy cleanup and direct-add change were applied before capture. The old screenshot blocker is resolved for this scope.
+3. A normal-development save exposed an internal container name in an OS error. The app-model error mapping was changed to a user-facing message; write-failure state preservation is covered by tests.
+
+## Follow-up coverage
+
+- Inspect dark appearance and minimum window size.
+- Exercise UI delete, reorder, and unsaved-draft edge cases.
+- Capture actual signed Finder menus on every supported OS; settings screenshots are not a substitute.

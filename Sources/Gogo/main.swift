@@ -1,17 +1,19 @@
 import AppKit
 import SwiftUI
+import Combine
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private var window: NSWindow?
     private var model: AppModel?
+    private var languageObservation: AnyCancellable?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let args = CommandLine.arguments
         if args.count == 3, args[1] == "--launch-request" {
             NSApp.setActivationPolicy(.accessory)
             Task {
-                var language = AppLanguage.system
+                var language = AppLanguage.en
                 do {
                     let config = try SharedConfiguration.file().read()
                     language = config.language
@@ -44,18 +46,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.center()
         window.makeKeyAndOrderFront(nil)
         self.window = window
+        languageObservation = model.$configuration.map(\.language).removeDuplicates().sink { [weak self] language in
+            self?.updateMenus(language: language)
+        }
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func updateMenus(language: AppLanguage) {
+        func t(_ key: String) -> String { Texts.get(key, language: language) }
         let menu = NSMenu()
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: model.t("quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: t("quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         let root = NSMenuItem(); root.submenu = appMenu; menu.addItem(root)
-        let edit = NSMenuItem(title: model.t("edit"), action: nil, keyEquivalent: "")
-        let editMenu = NSMenu(title: model.t("edit"))
+        let edit = NSMenuItem(title: t("edit"), action: nil, keyEquivalent: "")
+        let editMenu = NSMenu(title: t("edit"))
         for (key, action, shortcut) in [("cut", "cut:", "x"), ("copy", "copy:", "c"), ("paste", "paste:", "v"), ("selectAll", "selectAll:", "a")] {
-            editMenu.addItem(withTitle: model.t(key), action: Selector(action), keyEquivalent: shortcut)
+            editMenu.addItem(withTitle: t(key), action: Selector(action), keyEquivalent: shortcut)
         }
         edit.submenu = editMenu; menu.addItem(edit)
         NSApp.mainMenu = menu
-        NSApp.activate(ignoringOtherApps: true)
     }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         window?.makeKeyAndOrderFront(nil)
