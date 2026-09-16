@@ -30,11 +30,8 @@ Date: September 16, 2026. Environment: macOS 27.0 (26A428), Xcode 27.0 (27A266a)
 
 - [Launchers, English](screenshots/launchers-en.png)
 - [Launchers, Simplified Chinese](screenshots/launchers-zh.png)
-- [General, Follow System](screenshots/general-auto.png)
-- [About, English](screenshots/about-en.png)
-- [General, English](screenshots/general-en.png)
-- [General, Simplified Chinese](screenshots/general-zh.png)
-- [Finder settings, English](screenshots/finder-en.png)
+
+Only approved README images are versioned. Test screenshots remain local and are excluded from Git; the written validation observations above are retained.
 
 The preview uses a separate configuration file. Its successful saves do not prove shared-preference access or Finder extension behavior; installed runtime checks are recorded separately above.
 

@@ -6,11 +6,19 @@
 
 从 Finder 中，用喜欢的终端、编辑器或自定义程序打开文件与文件夹。
 
-gogo 是独立开发的 Swift macOS 项目，使用场景受 [OpenInTerminal](https://github.com/Ji4n1ng/OpenInTerminal) 启发。主程序只提供设置与关于页面，不创建常驻菜单栏图标或登录项；关闭设置窗口即退出。Finder 扩展由 macOS 管理。
-
 **当前为开发版本，尚未完成跨版本兼容性验收。** 最低部署目标为 macOS 15.7，计划覆盖 macOS 15.7、26、27。签名后的 Finder 集成仍需逐版本实机验证。
 
 ![gogo 原生设置界面](docs/screenshots/launchers-zh.png)
+
+## Finder 菜单
+
+**右键菜单**
+
+![Finder 中的 gogo 右键菜单](docs/screenshots/finder-context-menu.png)
+
+**工具栏菜单**
+
+![Finder 中的 gogo 工具栏菜单](docs/screenshots/finder-toolbar-menu.png)
 
 ## 功能
 
@@ -20,8 +28,8 @@ gogo 是独立开发的 Swift macOS 项目，使用场景受 [OpenInTerminal](ht
 - Finder 菜单覆盖已挂载的可见磁盘，包括移动硬盘，插入或推出磁盘后自动更新。
 - 默认跟随系统语言，也可手动选择 English 或简体中文。
 - 拖拽启动项调整顺序，点击行即可编辑，无行末操作菜单。
-- 共享配置具有版本标识，以完整快照保存；读取失败时不会静默覆盖原有设置。
-- 按需处理启动请求，完成后主程序退出。
+- 从 Finder 右键菜单或工具栏复制路径，多选时每行一个路径。
+- 不创建菜单栏图标或登录项。
 
 各终端和编辑器仍需独立验证；提供预设不代表该应用已在全部目标系统上通过测试。
 
@@ -63,8 +71,6 @@ pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
 pluginkit -m -A -D -v -i cn.053x.gogo.finder
 ```
 
-本地 ad-hoc 安装的共享设置及拷贝路径已在 macOS 27 验证；各应用启动流程及其他系统版本仍需分别验证。
-
 ## 启动参数
 
 - **用应用打开文件**：通过 LaunchServices 打开所选路径，可复用已运行的应用。
@@ -73,15 +79,15 @@ pluginkit -m -A -D -v -i cn.053x.gogo.finder
 
 `{paths}` 必须单独占一行，每个所选路径作为独立参数传入。`{directory}` 表示所选文件夹或文件所在目录。无需添加 shell 引号，也不展开波浪号、环境变量、通配符或 shell 命令。
 
-带参数的启动项目前要求所选项目对应同一个工作目录；文件打开方式允许选择多个目录。用户选择运行的程序可能长期运行，gogo 退出不会自动终止它。
+带参数的启动项目前要求所选项目对应同一个工作目录；文件打开方式允许选择多个目录。
 
 ## 设置界面
 
 拖拽启动项即可调整顺序，松开后自动保存。点击启动项进入编辑面板。
 
-**添加启动项**采用两段式按钮。点击左侧直接新建自定义启动项，保存后加入列表，取消则放弃草稿。右侧箭头列出当前缺少的预设，选择后恢复默认参数、启用并添加到列表末尾，不影响已有启动项的顺序和设置。没有需要恢复的预设时，箭头置灰。界面沿用选定的分栏设计与蓝底白色 `go` 图标；关于页只展示产品信息，不展示 bundle ID 或内部实现细节。
+点击**添加启动项**可新建自定义启动项，旁边的箭头用于恢复已移除的预设，不影响已有启动项。
 
-已有的语言选择会保留，新配置默认跟随系统。
+可在“通用”中选择跟随系统、English 或简体中文。
 
 ## 参与开发
 
@@ -89,22 +95,10 @@ pluginkit -m -A -D -v -i cn.053x.gogo.finder
 
 [选定的设计草图](docs/design/selected-concept.png) · [验证记录（英文）](docs/VALIDATION.md)
 
+## 致谢
+
+使用场景受 [OpenInTerminal](https://github.com/Ji4n1ng/OpenInTerminal) 启发。gogo 使用 Swift 独立实现。
+
 ## 许可证
 
-[MIT](LICENSE)。本项目独立实现，未复制 OpenInTerminal 源码。
-
-Finder 工具栏和右键菜单「用 gogo 快速打开」使用单色 go 标识。启动项仅显示名称和应用图标；复制当前路径、设置也配有对应图标。
-
-## 权限管理
-
-“通用”提供 Finder 扩展、文件与文件夹、iTerm2 自动化的管理入口。“文件与文件夹”卡片直接打开“系统设置 → 隐私与安全性 → 文件与文件夹”，用于查看或修改已有授权。文件访问权限由 macOS 在实际使用时按需请求，gogo 不展示逐项授权明细、不探测目录，也不提供文件预授权。
-
-打开“通用”、返回 gogo 或点击刷新时，会更新 Finder 扩展与 iTerm2 自动化状态。iTerm2 的“授权”按钮会在需要时启动 iTerm2 并申请自动化权限，不执行命令。启动的终端或编辑器也可能需要自己的权限。不保存或恢复权限检查记录；预览模式禁用授权和系统设置跳转操作。
-
-## 复制当前路径与共享设置
-
-在 Finder 右键菜单和工具栏的 gogo 菜单中选择「复制当前路径」。选中文件或文件夹时，复制选中项目的绝对路径，多选以换行分隔；未选中项目时，复制当前文件夹路径。复制内容为普通文本，不添加 shell 引号。
-
-主程序通过 CFPreferences 在 `cn.053x.gogo.settings` 域保存完整的版本化 JSON 配置，沙盒扩展仅有此域的只读权限，每次打开菜单重新读取。本地 ad-hoc 签名无需 App Group 容器即可保存和共享设置，正式发布仍需验证 Developer ID 签名与公证。
-
-旧开发版的 `group.cn.053x.gogo/configuration.json` 保留不动；无法访问的旧容器设置不会自动导入。预览配置仍独立存储。
+[MIT](LICENSE)。

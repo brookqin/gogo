@@ -6,3 +6,10 @@ DerivedData/
 xcuserdata/
 Config/Signing.xcconfig
 .build-log.txt
+
+# Only approved README screenshots belong in version control.
+/docs/screenshots/*
+!/docs/screenshots/launchers-en.png
+!/docs/screenshots/launchers-zh.png
+!/docs/screenshots/finder-context-menu.png
+!/docs/screenshots/finder-toolbar-menu.png

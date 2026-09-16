@@ -11,3 +11,4 @@
 - Pass arguments as arrays; never interpolate user paths into shell source.
 - Update English and Chinese resources together. Compilation does not establish Finder runtime compatibility.
 - Do not commit credentials, certificates, private keys, personal signing settings, build artifacts, or user configuration.
+- Keep test screenshots local under `.build/screenshots/`; do not commit them. Only approved README images belong in `docs/screenshots/` and its explicit `.gitignore` allowlist.

@@ -6,11 +6,19 @@ English · [简体中文](README.zh-CN.md)
 
 Open Finder selections in your favorite terminal, editor, or custom program.
 
-gogo is an independent Swift macOS project inspired by the workflow of [OpenInTerminal](https://github.com/Ji4n1ng/OpenInTerminal). The host app provides settings and About only. It has no menu bar icon or login item and quits when its settings window closes. macOS manages the Finder extension separately.
-
 **Development version, not a compatibility-certified release.** Deployment target: macOS 15.7. Intended coverage: macOS 15.7, 26, and 27. Signed Finder integration still requires validation on each version.
 
 ![Native gogo settings in English](docs/screenshots/launchers-en.png)
+
+## Finder menus
+
+**Context menu**
+
+![Quick Open with gogo in the Finder context menu](docs/screenshots/finder-context-menu.png)
+
+**Toolbar menu**
+
+![gogo Finder toolbar menu](docs/screenshots/finder-toolbar-menu.png)
 
 ## Features
 
@@ -21,8 +29,7 @@ gogo is an independent Swift macOS project inspired by the workflow of [OpenInTe
 - Drag to reorder launchers; click a row to edit.
 - Automatically follows the system language, with English and Simplified Chinese overrides.
 - Copy paths from the Finder context menu or toolbar (multiple selections are separated by newlines).
-- Versioned shared settings stored as complete snapshots. Unreadable settings are never silently overwritten.
-- On-demand launch handling; the host exits after dispatching the selected application.
+- No menu bar icon or login item.
 
 Presets require individual application and OS validation. Their presence does not imply all integrations have passed.
 
@@ -64,12 +71,6 @@ pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
 pluginkit -m -A -D -v -i cn.053x.gogo.finder
 ```
 
-The host writes one versioned JSON snapshot through CFPreferences in `cn.053x.gogo.settings`. The sandboxed extension has a read-only shared-preference entitlement for that exact domain and refreshes it when opening a menu. This supports local ad-hoc builds without a protected App Group container. Developer ID signing and notarization still require release validation.
-
-Older development builds used `group.cn.053x.gogo/configuration.json`. That file is left untouched; inaccessible old-container settings are not automatically imported. Preview settings remain separate.
-
-**Copy Current Path:** in the Finder context or toolbar menu, copy the absolute paths of selected files/folders, one per line. With nothing selected, copy the current folder path. Paths are plain text, without shell quoting.
-
 ## Arguments
 
 - **Open files with application** uses LaunchServices and may reuse the running application.
@@ -78,21 +79,13 @@ Older development builds used `group.cn.053x.gogo/configuration.json`. That file
 
 Use `{paths}` on its own line for selected paths, one argument per item. Use `{directory}` for the selected directory or a file's parent directory. Do not add shell quotes. Tilde, environment variables, globbing, and shell commands are not expanded. Argument-based launchers currently require a selection that resolves to one working directory; document launchers allow multiple directories.
 
-User-selected executables may themselves be long-lived. The host's lifecycle does not terminate them.
-
-The Finder toolbar and **Quick Open with gogo** context entry use a monochrome go mark. Launcher entries show only their names and application icons; Copy Current Path and Settings have dedicated symbols.
-
 ## Configuration UI
-
-General includes permission controls for the Finder extension, Files and Folders, and iTerm2 Automation. The Files and Folders card opens System Settings → Privacy & Security → Files and Folders to review or change existing grants. macOS requests file access when it is needed during use; gogo does not list individual folder grants, probe directories, or offer file preauthorization.
-
-Finder extension and iTerm2 Automation status refresh when General opens, gogo becomes active, or Refresh is clicked. The iTerm2 Authorize button starts iTerm2 if needed and requests Automation consent without running a command. The selected terminal/editor may require its own permissions. No permission history is saved or restored; preview mode disables authorization and System Settings actions.
 
 Drag launcher rows to change their order; changes are saved when you drop. Click a row to edit it.
 
-**Add Launcher** is a split button. Click the main segment to create a custom launcher; Save adds it and Cancel discards the draft. The separate arrow lists missing presets. Select one to restore its default settings, enable it, and append it to the list. Existing launchers keep their order and settings. The arrow is disabled when there are no presets to restore. The selected design and blue `go` logo remain the visual baseline. About shows product information without the bundle identifier. Implementation and release-validation details belong in developer documentation.
+Click **Add Launcher** to create a custom launcher. Use the arrow beside it to restore a removed preset without changing existing launchers.
 
-Existing saved language choices are preserved. New configurations default to Follow System.
+Choose Follow System, English, or Simplified Chinese in General.
 
 ## Contributing
 
@@ -100,6 +93,10 @@ Core models and argument tests are under `Sources/GogoCore` and `Tests/GogoCoreT
 
 [Selected design](docs/design/selected-concept.png) · [Validation record](docs/VALIDATION.md)
 
+## Acknowledgments
+
+Inspired by the workflow of [OpenInTerminal](https://github.com/Ji4n1ng/OpenInTerminal). gogo is independently implemented in Swift.
+
 ## License
 
-[MIT](LICENSE). Independently implemented; no OpenInTerminal source code was copied.
+[MIT](LICENSE).
