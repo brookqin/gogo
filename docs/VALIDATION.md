@@ -40,7 +40,8 @@ The preview uses a separate configuration file. Its successful saves do not prov
 | --- | --- |
 | Signed App Group sharing | No valid code-signing identity is installed. Xcode rejects the entitlement-bearing development build without a certificate. A normal local run also demonstrated shared-container write denial. |
 | Finder registration | Ad-hoc local installation in `/Applications/gogo.app` is registered by PlugInKit and visible in System Settings on macOS 27. Original preview signatures omitted the sandbox entitlement; pkd explicitly rejected them. Re-signing with the configured entitlements and registering the installed containing app resolved discovery. |
-| Finder enablement, contextual menu, toolbar callbacks, and dispatch | Still pending runtime validation. The extension was left off in System Settings; registration alone does not prove execution or App Group access. |
+| Finder toolbar image | Extension enablement and toolbar-image callbacks observed on macOS 27. A dedicated 18-point image with concrete 18px/36px bitmap representations renders correctly in the toolbar and customization palette after updating the installed app and refreshing Finder. Archive round-trip checks confirm both sizes and image coverage. |
+| Finder contextual menus, launch dispatch, and shared settings | Still pending end-to-end runtime validation; toolbar rendering does not prove App Group access or launcher execution. |
 | Individual terminal/editor integrations | Presets still need cold-start and already-running checks, including iTerm2 Automation approval and denial. The executable fixture does not establish terminal compatibility. |
 | macOS 15.7 and 26 runtime | No matching runtime environment available. |
 | Intel runtime | Universal binaries compiled; no Intel runtime validation. |

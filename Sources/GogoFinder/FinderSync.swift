@@ -10,7 +10,28 @@ final class FinderSync: FIFinderSync {
     override var toolbarItemName: String { "gogo" }
     override var toolbarItemToolTip: String { "gogo" }
     override var toolbarItemImage: NSImage {
-        let image = NSImage(named: "AppIcon") ?? NSImage(systemSymbolName: "terminal", accessibilityDescription: "gogo")!
+        let source = NSImage(named: "AppIcon") ?? NSImage(systemSymbolName: "terminal", accessibilityDescription: "gogo")!
+        // Give Finder a separate toolbar-sized image, not the named application icon.
+        // The customization palette otherwise expands to the app icon's intrinsic size.
+        let size = NSSize(width: 18, height: 18)
+        let image = NSImage(size: size)
+        // Concrete 1x/2x bitmap representations survive transport to the Finder process.
+        for scale in [1, 2] {
+            guard let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil,
+                pixelsWide: 18 * scale, pixelsHigh: 18 * scale,
+                bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0),
+                let context = NSGraphicsContext(bitmapImageRep: bitmap) else { continue }
+            bitmap.size = size
+            NSGraphicsContext.saveGraphicsState()
+            NSGraphicsContext.current = context
+            context.imageInterpolation = .high
+            context.cgContext.scaleBy(x: CGFloat(scale), y: CGFloat(scale))
+            source.draw(in: NSRect(origin: .zero, size: size), from: .zero,
+                        operation: .sourceOver, fraction: 1)
+            NSGraphicsContext.restoreGraphicsState()
+            image.addRepresentation(bitmap)
+        }
         image.isTemplate = false
         return image
     }
