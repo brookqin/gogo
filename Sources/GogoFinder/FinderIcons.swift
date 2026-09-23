@@ -4,7 +4,7 @@ import AppKit
 /// and customization palette. The SVG remains the editable source of the mark.
 enum FinderIcons {
     static let toolbar = logo(size: 18)
-    static let menuLogo = logo(size: 16)
+    static var menuLogo: NSImage { menuImage(logo(size: 16)) }
 
     private static func logo(size: Int) -> NSImage {
         let source = Bundle.main.url(forResource: "GogoTemplate", withExtension: "svg")
@@ -25,10 +25,22 @@ enum FinderIcons {
     static func symbol(_ name: String) -> NSImage {
         let source = NSImage(systemSymbolName: name, accessibilityDescription: nil)!
             .withSymbolConfiguration(.init(pointSize: 14, weight: .regular))!
-        return rasterized(source, size: 16, template: true)
+        return menuImage(source)
     }
 
-    static func rasterized(_ source: NSImage, size: Int, template: Bool) -> NSImage {
+    /// Give Finder usable pixels even when it does not apply template tinting.
+    /// Resolve the appearance on each menu request, not at extension startup.
+    static func menuImage(_ source: NSImage,
+                          appearance: NSAppearance = NSApplication.shared.effectiveAppearance) -> NSImage {
+        var image: NSImage!
+        appearance.performAsCurrentDrawingAppearance {
+            image = rasterized(source, size: 16, template: true, tint: .labelColor)
+        }
+        image.accessibilityDescription = source.accessibilityDescription
+        return image
+    }
+
+    static func rasterized(_ source: NSImage, size: Int, template: Bool, tint: NSColor? = nil) -> NSImage {
         let logicalSize = NSSize(width: size, height: size)
         let image = NSImage(size: logicalSize)
         for scale in [1, 2] {
@@ -47,6 +59,10 @@ enum FinderIcons {
                               y: (logicalSize.height - fittedSize.height) / 2,
                               width: fittedSize.width, height: fittedSize.height)
             source.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1)
+            if let tint {
+                tint.setFill()
+                NSRect(origin: .zero, size: logicalSize).fill(using: .sourceIn)
+            }
             NSGraphicsContext.restoreGraphicsState()
             // Set the point size after drawing: setting it before creating the
             // context would apply Retina scaling twice.
