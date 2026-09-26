@@ -17,8 +17,15 @@ final class FinderMenu {
         destination.addItem(item)
     }
 
-    func presented(submenuTitle: String, submenuImage: NSImage) -> NSMenu {
+    func addCopyPath(_ item: NSMenuItem, directlyInContextMenu: Bool, addSeparator: (NSMenu) -> Void) {
+        let destination = !toolbar && directlyInContextMenu ? root : content
+        addSeparator(destination)
+        destination.addItem(item)
+    }
+
+    func presented(submenuTitle: String, submenuImage: NSImage, showSubmenu: Bool = true) -> NSMenu {
         if toolbar { return content }
+        guard showSubmenu else { return root }
         let parent = NSMenuItem(title: submenuTitle, action: nil, keyEquivalent: "")
         parent.image = submenuImage
         parent.submenu = content

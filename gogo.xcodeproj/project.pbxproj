@@ -348,14 +348,14 @@
 		"6DEC24A06B61CB5C3CF1C9B1" = {
 			"isa" = "PBXFileReference";
 			"explicitFileType" = "wrapper.application";
-			"path" = "gogo.app";
+			"path" = "Gogo.app";
 			"sourceTree" = "BUILT_PRODUCTS_DIR";
 			"includeInIndex" = 0;
 		};
 		"ADC869E2D4DCFC14322D684F" = {
 			"isa" = "XCBuildConfiguration";
 			"buildSettings" = {
-				"PRODUCT_NAME" = "gogo";
+				"PRODUCT_NAME" = "Gogo";
 				"PRODUCT_BUNDLE_IDENTIFIER" = "cn.053x.gogo";
 				"SWIFT_VERSION" = "5.0";
 				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
@@ -378,7 +378,7 @@
 		"EAD8491D4E5A67C7CE06A9A2" = {
 			"isa" = "XCBuildConfiguration";
 			"buildSettings" = {
-				"PRODUCT_NAME" = "gogo";
+				"PRODUCT_NAME" = "Gogo";
 				"PRODUCT_BUNDLE_IDENTIFIER" = "cn.053x.gogo";
 				"SWIFT_VERSION" = "5.0";
 				"MACOSX_DEPLOYMENT_TARGET" = "15.7";
@@ -439,7 +439,7 @@
 			"buildRules" = ();
 			"dependencies" = ("965FF32F58B180754D654307");
 			"name" = "gogo";
-			"productName" = "gogo";
+			"productName" = "Gogo";
 			"productReference" = "6DEC24A06B61CB5C3CF1C9B1";
 			"productType" = "com.apple.product-type.application";
 		};

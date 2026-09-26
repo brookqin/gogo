@@ -16,7 +16,7 @@ The workflow:
 2. Generates release notes from the nearest reachable version tag to the current tag, including merged commits. Both lightweight and annotated tags qualify; unrelated branch tags and non-version tags are excluded. The first version includes all commits. Two versions pointing to the same commit produce an empty-change note. This uses Git tags, not GitHub's latest-release timestamp.
 3. Runs release-tool and Swift tests, then builds separate optimized arm64 and x86_64 apps with deployment target macOS 15.7.
 4. Sets the host and embedded Finder extension bundle versions to the numeric tag version (for example, `1.2.3` for `v1.2.3-rc.1`), signs the extension and host ad hoc with their existing entitlements, and verifies signatures and architectures.
-5. Uses [create-dmg](https://github.com/create-dmg/create-dmg) to make one DMG per architecture, with the app icon and an Applications drop link. Publishes a GitHub Release with the commit changelog and three assets: `gogo-vVERSION-arm64.dmg`, `gogo-vVERSION-x86_64.dmg`, and `SHA256SUMS.txt`. No ZIP is produced. Tags with a prerelease suffix create prereleases. The full tag remains in release titles and asset names.
+5. Uses [create-dmg](https://github.com/create-dmg/create-dmg) to make one DMG per architecture, with the app icon and an Applications drop link. Publishes a GitHub Release with the commit changelog and three assets: `Gogo-vVERSION-arm64.dmg`, `Gogo-vVERSION-x86_64.dmg`, and `SHA256SUMS.txt`. No ZIP is produced. Tags with a prerelease suffix create prereleases. The full tag remains in release titles and asset names.
 
 Only the release job has `contents: write`; it uses the automatically supplied `GITHUB_TOKEN`. No Apple developer credentials or extra GitHub token are required. The app is not notarized, and users follow the README's first-launch instructions. Files are prepared and tested before the publish step. An existing release is not overwritten: use a new tag for changed binaries; rerunning a failed job is appropriate if no release was created.
 
@@ -31,7 +31,7 @@ swift test
 ./scripts/package-release.sh v0.2.0
 ```
 
-The release workflow installs create-dmg through Homebrew. Packaging writes to `.build/release/`, uses separate build directories for each architecture, and does not upload, launch, or install the app. create-dmg uses Finder to arrange the DMG window; local runs may request permission to automate Finder. The tag argument supplies the version for local packaging and need not exist; generating release notes requires an actual local Git tag. Avoid keeping development app copies registered in LaunchServices or PlugInKit alongside an installed gogo app.
+The release workflow installs create-dmg through Homebrew. Packaging writes to `.build/release/`, uses separate build directories for each architecture, and does not upload, launch, or install the app. create-dmg uses Finder to arrange the DMG window; local runs may request permission to automate Finder. The tag argument supplies the version for local packaging and need not exist; generating release notes requires an actual local Git tag. Avoid keeping development app copies registered in LaunchServices or PlugInKit alongside an installed Gogo app.
 
 CI builds do not establish Finder behavior on all supported macOS versions. Downloaded-installation, Gatekeeper, and real Finder menu behavior still need runtime checks.
 

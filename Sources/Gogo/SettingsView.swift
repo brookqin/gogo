@@ -59,7 +59,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 9) {
                 Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()).resizable().frame(width: 34, height: 34)
-                Text("gogo").font(.title3.weight(.semibold))
+                Text("Gogo").font(.title3.weight(.semibold))
             }.padding(.horizontal, 10).padding(.top, 20).padding(.bottom, 20)
             ForEach([("launchers", "gearshape"), ("finder", "folder"), ("general", "slider.horizontal.3"), ("about", "info.circle")], id: \.0) { key, symbol in
                 Button { section = key } label: {
@@ -211,6 +211,9 @@ struct SettingsView: View {
                 }
                 Divider()
                 Toggle(model.t("finder.context"), isOn: configBinding(\.showContextMenu))
+                Text(model.t("finder.context.help")).font(.callout).foregroundStyle(.secondary)
+                Toggle(model.t("finder.copyPath.root"), isOn: configBinding(\.showCopyPathInContextMenuRoot))
+                Text(model.t("finder.copyPath.root.help")).font(.callout).foregroundStyle(.secondary)
                 Toggle(model.t("finder.toolbar"), isOn: configBinding(\.showToolbarLaunchers))
                 Text(model.t("finder.toolbar.help")).font(.callout).foregroundStyle(.secondary)
                 Divider()
@@ -251,7 +254,7 @@ struct SettingsView: View {
         VStack(spacing: 18) {
             Spacer(minLength: 20)
             Image(nsImage: NSImage(named: "AppIcon") ?? NSImage()).resizable().frame(width: 130, height: 130)
-            Text("gogo").font(.system(size: 32, weight: .bold))
+            Text("Gogo").font(.system(size: 32, weight: .bold))
             if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
                 Text(String(format: model.t("about.version"), version)).foregroundStyle(.secondary)
             }

@@ -1,6 +1,6 @@
-"NSAppleEventsUsageDescription" = "gogo 需要控制 iTerm2，以在你选择的文件夹中打开终端。";
-"NSDesktopFolderUsageDescription" = "gogo 需要访问桌面，以使用你选择的应用打开其中的项目。";
-"NSDocumentsFolderUsageDescription" = "gogo 需要访问文稿文件夹，以使用你选择的应用打开其中的项目。";
-"NSDownloadsFolderUsageDescription" = "gogo 需要访问下载文件夹，以使用你选择的应用打开其中的项目。";
-"NSRemovableVolumesUsageDescription" = "gogo 需要访问移动磁盘，以使用你选择的应用打开其中的项目。";
-"NSNetworkVolumesUsageDescription" = "gogo 需要访问网络宗卷，以使用你选择的应用打开其中的项目。";
+"NSAppleEventsUsageDescription" = "Gogo 需要控制 iTerm2，以在你选择的文件夹中打开终端。";
+"NSDesktopFolderUsageDescription" = "Gogo 需要访问桌面，以使用你选择的应用打开其中的项目。";
+"NSDocumentsFolderUsageDescription" = "Gogo 需要访问文稿文件夹，以使用你选择的应用打开其中的项目。";
+"NSDownloadsFolderUsageDescription" = "Gogo 需要访问下载文件夹，以使用你选择的应用打开其中的项目。";
+"NSRemovableVolumesUsageDescription" = "Gogo 需要访问移动磁盘，以使用你选择的应用打开其中的项目。";
+"NSNetworkVolumesUsageDescription" = "Gogo 需要访问网络宗卷，以使用你选择的应用打开其中的项目。";

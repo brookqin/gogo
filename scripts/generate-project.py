@@ -20,24 +20,24 @@ def build(target, reference, settings=None):
 config = ROOT/'Config'
 config.mkdir(exist_ok=True)
 host_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABLE_NAME)',
-    CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='gogo', CFBundleDisplayName='gogo',
+    CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='Gogo', CFBundleDisplayName='Gogo',
     CFBundlePackageType='APPL', CFBundleShortVersionString='0.1.0', CFBundleVersion='1',
     CFBundleIconFile='AppIcon', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
     LSUIElement=True, NSHighResolutionCapable=True,
-    CFBundleDocumentTypes=[dict(CFBundleTypeName='gogo Launch Request', CFBundleTypeRole='Viewer',
+    CFBundleDocumentTypes=[dict(CFBundleTypeName='Gogo Launch Request', CFBundleTypeRole='Viewer',
         LSHandlerRank='None', LSItemContentTypes=['cn.053x.gogo.launch-request'])],
     UTExportedTypeDeclarations=[dict(UTTypeIdentifier='cn.053x.gogo.launch-request',
-        UTTypeConformsTo=['public.data'], UTTypeDescription='gogo Launch Request',
+        UTTypeConformsTo=['public.data'], UTTypeDescription='Gogo Launch Request',
         UTTypeTagSpecification={'public.filename-extension':['gogorequest']})],
-    NSDesktopFolderUsageDescription='gogo needs access to open items from your Desktop in the apps you choose.',
-    NSDocumentsFolderUsageDescription='gogo needs access to open items from Documents in the apps you choose.',
-    NSDownloadsFolderUsageDescription='gogo needs access to open items from Downloads in the apps you choose.',
-    NSRemovableVolumesUsageDescription='gogo needs access to open items on external drives in the apps you choose.',
-    NSNetworkVolumesUsageDescription='gogo needs access to open items on network volumes in the apps you choose.',
-    NSAppleEventsUsageDescription='gogo needs permission to control iTerm2 to open a terminal in the folder you choose.')
+    NSDesktopFolderUsageDescription='Gogo needs access to open items from your Desktop in the apps you choose.',
+    NSDocumentsFolderUsageDescription='Gogo needs access to open items from Documents in the apps you choose.',
+    NSDownloadsFolderUsageDescription='Gogo needs access to open items from Downloads in the apps you choose.',
+    NSRemovableVolumesUsageDescription='Gogo needs access to open items on external drives in the apps you choose.',
+    NSNetworkVolumesUsageDescription='Gogo needs access to open items on network volumes in the apps you choose.',
+    NSAppleEventsUsageDescription='Gogo needs permission to control iTerm2 to open a terminal in the folder you choose.')
 extension_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABLE_NAME)',
-    CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='gogo Finder',
-    CFBundleDisplayName='gogo', CFBundlePackageType='XPC!', CFBundleShortVersionString='0.1.0',
+    CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='Gogo Finder',
+    CFBundleDisplayName='Gogo', CFBundlePackageType='XPC!', CFBundleShortVersionString='0.1.0',
     CFBundleVersion='1', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
     NSExtension=dict(NSExtensionPointIdentifier='com.apple.FinderSync', NSExtensionPrincipalClass='$(PRODUCT_MODULE_NAME).FinderSync'))
 for filename, value in [('Gogo-Info.plist',host_info),('Finder-Info.plist',extension_info),
@@ -51,7 +51,7 @@ target_ids = {}
 products = []
 for name, directory, product, bundle, kind in [
     ('GogoFinder','GogoFinder','GogoFinder.appex','cn.053x.gogo.finder','com.apple.product-type.app-extension'),
-    ('gogo','Gogo','gogo.app','cn.053x.gogo','com.apple.product-type.application')]:
+    ('gogo','Gogo','Gogo.app','cn.053x.gogo','com.apple.product-type.application')]:
     srcs=[]
     for path in [*shared,*sorted((ROOT/'Sources'/directory).glob('*.swift'))]:
         file=ref(str(path.relative_to(ROOT)), 'sourcecode.swift')
@@ -78,7 +78,7 @@ for name, directory, product, bundle, kind in [
     products.append(product_ref)
     configs=[]
     for mode in ['Debug','Release']:
-        settings=dict(PRODUCT_NAME=name, PRODUCT_BUNDLE_IDENTIFIER=bundle, SWIFT_VERSION='5.0',
+        settings=dict(PRODUCT_NAME=Path(product).stem, PRODUCT_BUNDLE_IDENTIFIER=bundle, SWIFT_VERSION='5.0',
             MACOSX_DEPLOYMENT_TARGET='15.7', SDKROOT='macosx', CODE_SIGN_STYLE='Automatic', CODE_SIGN_IDENTITY='-',
             CODE_SIGN_ENTITLEMENTS=f'Config/{"Finder" if name=="GogoFinder" else "Gogo"}.entitlements',
             INFOPLIST_FILE=f'Config/{"Finder" if name=="GogoFinder" else "Gogo"}-Info.plist',
@@ -99,7 +99,7 @@ for name, directory, product, bundle, kind in [
         phases.append(embed)
         proxy=obj('extension-proxy','PBXContainerItemProxy',containerPortal=ident('project'),proxyType=1,remoteGlobalIDString=target_ids['GogoFinder'],remoteInfo='GogoFinder')
         dependencies=[obj('extension-dependency','PBXTargetDependency',target=target_ids['GogoFinder'],targetProxy=proxy)]
-    target_ids[name]=obj(name+':target','PBXNativeTarget',buildConfigurationList=configs,buildPhases=phases,buildRules=[],dependencies=dependencies,name=name,productName=name,productReference=product_ref,productType=kind)
+    target_ids[name]=obj(name+':target','PBXNativeTarget',buildConfigurationList=configs,buildPhases=phases,buildRules=[],dependencies=dependencies,name=name,productName=Path(product).stem,productReference=product_ref,productType=kind)
 
 product_group=obj('products','PBXGroup',children=products,name='Products',sourceTree='<group>')
 main_group=obj('main-group','PBXGroup',children=files+[product_group],sourceTree='<group>')
@@ -121,11 +121,11 @@ scheme.mkdir(parents=True,exist_ok=True)
 <Scheme LastUpgradeVersion="2700" version="1.3">
  <BuildAction parallelizeBuildables="YES" buildImplicitDependencies="YES"><BuildActionEntries>
   <BuildActionEntry buildForTesting="YES" buildForRunning="YES" buildForProfiling="YES" buildForArchiving="YES" buildForAnalyzing="YES">
-   <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="{target_ids['gogo']}" BuildableName="gogo.app" BlueprintName="gogo" ReferencedContainer="container:gogo.xcodeproj"/>
+   <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="{target_ids['gogo']}" BuildableName="Gogo.app" BlueprintName="gogo" ReferencedContainer="container:gogo.xcodeproj"/>
   </BuildActionEntry>
  </BuildActionEntries></BuildAction>
  <LaunchAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.IDEFoundation.Launcher.LLDB" launchStyle="0" useCustomWorkingDirectory="NO" ignoresPersistentStateOnLaunch="NO" debugDocumentVersioning="YES" allowLocationSimulation="YES">
-  <BuildableProductRunnable runnableDebuggingMode="0"><BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="{target_ids['gogo']}" BuildableName="gogo.app" BlueprintName="gogo" ReferencedContainer="container:gogo.xcodeproj"/></BuildableProductRunnable>
+  <BuildableProductRunnable runnableDebuggingMode="0"><BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="{target_ids['gogo']}" BuildableName="Gogo.app" BlueprintName="gogo" ReferencedContainer="container:gogo.xcodeproj"/></BuildableProductRunnable>
  </LaunchAction>
  <ArchiveAction buildConfiguration="Release" revealArchiveInOrganizer="YES"/>
 </Scheme>

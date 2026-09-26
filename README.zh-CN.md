@@ -1,30 +1,30 @@
-# gogo
+# Gogo
 
 [English](README.md) · 简体中文
 
-<img src="Assets/AppIcon.png" alt="gogo" width="120" />
+<img src="Assets/AppIcon.png" alt="Gogo" width="120" />
 
 从 Finder 中，用喜欢的终端、编辑器或自定义程序打开文件与文件夹。
 
 **当前为开发版本，尚未完成跨版本兼容性验收。** 最低部署目标为 macOS 15.7，计划覆盖 macOS 15.7、26、27。签名后的 Finder 集成仍需逐版本实机验证。
 
-![gogo 原生设置界面](docs/screenshots/launchers-zh.png)
+![Gogo 原生设置界面](docs/screenshots/launchers-zh.png)
 
 ## Finder 菜单
 
 **右键菜单**
 
-![Finder 中的 gogo 右键菜单](docs/screenshots/finder-context-menu.png)
+![Finder 中的 Gogo 右键菜单](docs/screenshots/finder-context-menu.png)
 
 **工具栏菜单**
 
-![Finder 中的 gogo 工具栏菜单](docs/screenshots/finder-toolbar-menu.png)
+![Finder 中的 Gogo 工具栏菜单](docs/screenshots/finder-toolbar-menu.png)
 
 ## 功能
 
 - 内置 Terminal、iTerm2、Ghostty、Visual Studio Code、Zed、Fork、Typora、Xcode 启动预设。
 - 支持自定义应用或可执行文件路径，逐行填写启动参数。
-- 每个启动项可选择直接显示在 Finder 右键菜单，或放入“用 gogo 快速打开”子菜单；不影响工具栏菜单。
+- 每个启动项可选择直接显示在 Finder 右键菜单，或放入“用 Gogo 打开”子菜单；隐藏该菜单组不会隐藏顶层启动项，也不影响工具栏菜单。
 - Finder 菜单覆盖已挂载的可见磁盘，包括移动硬盘，插入或推出磁盘后自动更新。
 - 默认跟随系统语言，也可手动选择 English 或简体中文。
 - 拖拽启动项调整顺序，点击行即可编辑，无行末操作菜单。
@@ -35,12 +35,12 @@
 
 ## 安装
 
-安装打包后的应用无需 Xcode 或 Apple 开发者账号。gogo 目前未经 Apple 公证，首次打开时可能被 macOS 拦截。
+安装打包后的应用无需 Xcode 或 Apple 开发者账号。Gogo 目前未经 Apple 公证，首次打开时可能被 macOS 拦截。
 
-1. 在 [GitHub Releases](https://github.com/brookqin/gogo/releases) 有安装包发布后下载，Apple Silicon 芯片选择 **arm64**，Intel 芯片选择 **x86_64**。打开 DMG，将 **gogo.app** 拖入**应用程序**。
-2. 打开 gogo。若 macOS 提示无法验证开发者，前往**系统设置 → 隐私与安全性 → 仍要打开**，再确认**打开**。仅在信任下载来源时继续，具体可参考 [Apple 官方说明](https://support.apple.com/zh-cn/102445)。
-3. 在 gogo 中进入**通用 → Finder 扩展 → 管理扩展**，启用 gogo 的 Finder 扩展。不同 macOS 版本的系统设置位置可能有所不同。
-4. 在 Finder 中选择**显示 → 自定工具栏**，添加 gogo 按钮。使用过程中，文件访问权限由 macOS 按需请求。
+1. 在 [GitHub Releases](https://github.com/brookqin/gogo/releases) 有安装包发布后下载，Apple Silicon 芯片选择 **arm64**，Intel 芯片选择 **x86_64**。打开 DMG，将 **Gogo.app** 拖入**应用程序**。
+2. 打开 Gogo。若 macOS 提示无法验证开发者，前往**系统设置 → 隐私与安全性 → 仍要打开**，再确认**打开**。仅在信任下载来源时继续，具体可参考 [Apple 官方说明](https://support.apple.com/zh-cn/102445)。
+3. 在 Gogo 中进入**通用 → Finder 扩展 → 管理扩展**，启用 Gogo 的 Finder 扩展。不同 macOS 版本的系统设置位置可能有所不同。
+4. 在 Finder 中选择**显示 → 自定工具栏**，添加 Gogo 按钮。使用过程中，文件访问权限由 macOS 按需请求。
 
 ## 构建
 
@@ -51,14 +51,14 @@ swift test
 ./scripts/build.sh CODE_SIGNING_ALLOWED=NO
 ```
 
-脚本生成 `gogo.xcodeproj`，构建产物位于 `.build/xcode/Build/Products/Debug/gogo.app`。未签名构建只用于编译检查。
+脚本生成 `gogo.xcodeproj`，构建产物位于 `.build/xcode/Build/Products/Debug/Gogo.app`。未签名构建只用于编译检查。
 
 如需使用独立配置预览设置界面：
 
 ```sh
-codesign --force --sign - --entitlements Config/Finder.entitlements .build/xcode/Build/Products/Debug/gogo.app/Contents/PlugIns/GogoFinder.appex
-codesign --force --sign - --entitlements Config/Gogo.entitlements .build/xcode/Build/Products/Debug/gogo.app
-open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
+codesign --force --sign - --entitlements Config/Finder.entitlements .build/xcode/Build/Products/Debug/Gogo.app/Contents/PlugIns/GogoFinder.appex
+codesign --force --sign - --entitlements Config/Gogo.entitlements .build/xcode/Build/Products/Debug/Gogo.app
+open -n .build/xcode/Build/Products/Debug/Gogo.app --args --preview
 ```
 
 预览配置位于系统临时目录下的 `gogo-preview/configuration.json`，不会配置 Finder 扩展。
@@ -67,12 +67,12 @@ open -n .build/xcode/Build/Products/Debug/gogo.app --args --preview
 
 设置界面能打开，不代表 Finder 扩展已经注册。签名时必须保留扩展的沙盒声明：仅使用 `codesign --sign -` 重新签名会移除该声明，PlugInKit 会以 `plug-ins must be sandboxed` 为由拒绝扩展。
 
-将应用安装到 `/Applications` 并打开安装后的副本，再前往**系统设置 → 通用 → 登录项与扩展 → 按 App → gogo**。当前测试的 macOS 27 将 Finder Sync 标为“文件提供程序”。扩展是否启用由用户单独选择。
+将应用安装到 `/Applications` 并打开安装后的副本，再前往**系统设置 → 通用 → 登录项与扩展 → 按 App → Gogo**。当前测试的 macOS 27 将 Finder Sync 标为“文件提供程序”。扩展是否启用由用户单独选择。
 
 本地开发时可检查注册状态：
 
 ```sh
-pluginkit -a /Applications/gogo.app/Contents/PlugIns/GogoFinder.appex
+pluginkit -a /Applications/Gogo.app/Contents/PlugIns/GogoFinder.appex
 pluginkit -m -A -D -v -i cn.053x.gogo.finder
 ```
 
@@ -102,7 +102,7 @@ pluginkit -m -A -D -v -i cn.053x.gogo.finder
 
 ## 致谢
 
-使用场景受 [OpenInTerminal](https://github.com/Ji4n1ng/OpenInTerminal) 启发。gogo 使用 Swift 独立实现。
+使用场景受 [OpenInTerminal](https://github.com/Ji4n1ng/OpenInTerminal) 启发。Gogo 使用 Swift 独立实现。
 
 ## 许可证
 

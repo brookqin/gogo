@@ -95,8 +95,25 @@ public struct Configuration: Codable, Equatable, Sendable {
     public var language: AppLanguage = .system
     public var showContextMenu = true
     public var showToolbarLaunchers = true
+    public var showCopyPathInContextMenuRoot = false
     public var launchers: [Launcher] = Launcher.presets
     public init() {}
+
+    private enum CodingKeys: String, CodingKey {
+        case version, language, showContextMenu, showToolbarLaunchers, showCopyPathInContextMenuRoot, launchers
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        version = try values.decode(Int.self, forKey: .version)
+        language = try values.decode(AppLanguage.self, forKey: .language)
+        showContextMenu = try values.decode(Bool.self, forKey: .showContextMenu)
+        showToolbarLaunchers = try values.decode(Bool.self, forKey: .showToolbarLaunchers)
+        launchers = try values.decode([Launcher].self, forKey: .launchers)
+        // Older version-1 snapshots keep Copy Current Path in the submenu.
+        showCopyPathInContextMenuRoot = try values.contains(.showCopyPathInContextMenuRoot)
+            ? values.decode(Bool.self, forKey: .showCopyPathInContextMenuRoot) : false
+    }
 
     public func validate() throws {
         guard version == 1 else { throw GogoError.unsupportedVersion }

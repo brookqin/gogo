@@ -241,3 +241,19 @@ private func temporaryDirectory() throws -> URL {
     #expect(throws: GogoError.invalidRequest) { try LaunchHandoff.consume(url, directory: insideDirectory) }
     #expect(FileManager.default.fileExists(atPath: outside.path))
 }
+
+@MainActor @Test func copyPathPlacementPersistsIndependentlyOfSubmenuVisibility() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
+    let model = AppModel(preview: true, configurationFile: file)
+    let originalLaunchers = model.configuration.launchers
+    #expect(!model.configuration.showCopyPathInContextMenuRoot)
+    #expect(model.update { $0.showCopyPathInContextMenuRoot = true; $0.showContextMenu = false })
+    let reloaded = AppModel(preview: true, configurationFile: file)
+    #expect(reloaded.configuration.showCopyPathInContextMenuRoot)
+    #expect(!reloaded.configuration.showContextMenu)
+    #expect(reloaded.configuration.launchers == originalLaunchers)
+    #expect(reloaded.update { $0.showCopyPathInContextMenuRoot = false })
+    #expect(try !file.read().showCopyPathInContextMenuRoot)
+}

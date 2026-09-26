@@ -94,3 +94,24 @@ import Testing
     }))
     #expect(throws: GogoError.invalidRequest) { try request.encoded() }
 }
+
+@Test func legacyConfigurationKeepsCopyPathInSubmenu() throws {
+    var original = Configuration()
+    original.language = .en
+    original.showContextMenu = false
+    original.launchers[0].showInContextMenuRoot = true
+    var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
+    json.removeValue(forKey: "showCopyPathInContextMenuRoot")
+    let restored = try JSONDecoder().decode(Configuration.self, from: JSONSerialization.data(withJSONObject: json))
+    #expect(restored == original)
+    #expect(!restored.showCopyPathInContextMenuRoot)
+}
+
+@Test func invalidCopyPathPlacementIsRejected() throws {
+    var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(Configuration())) as? [String: Any])
+    for invalid in ["true" as Any, NSNull()] {
+        json["showCopyPathInContextMenuRoot"] = invalid
+        let data = try JSONSerialization.data(withJSONObject: json)
+        #expect(throws: (any Error).self) { try JSONDecoder().decode(Configuration.self, from: data) }
+    }
+}

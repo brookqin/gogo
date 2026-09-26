@@ -20,8 +20,8 @@ for arch in arm64 x86_64; do
 
   source_folder="$staging/$arch"
   mkdir -p "$source_folder"
-  app="$source_folder/gogo.app"
-  ditto "$derived_data/Build/Products/Release/gogo.app" "$app"
+  app="$source_folder/Gogo.app"
+  ditto "$derived_data/Build/Products/Release/Gogo.app" "$app"
   extension="$app/Contents/PlugIns/GogoFinder.appex"
 
   # Set both bundle versions before signing. Build output remains unsigned so it
@@ -38,7 +38,7 @@ for bundle in (app, app/'Contents/PlugIns/GogoFinder.appex'):
     info['CFBundleVersion'] = version
     path.write_bytes(plistlib.dumps(info, sort_keys=False))
 PY
-  for binary in "$app/Contents/MacOS/gogo" "$extension/Contents/MacOS/GogoFinder"; do
+  for binary in "$app/Contents/MacOS/Gogo" "$extension/Contents/MacOS/GogoFinder"; do
     architectures=$(lipo -archs "$binary")
     if [[ "$architectures" != "$arch" ]]; then
       echo "Expected $arch in $binary, found: $architectures" >&2
@@ -50,20 +50,20 @@ PY
   codesign --verify --deep --strict "$app"
 
   create-dmg \
-    --volname "gogo $tag ($arch)" \
+    --volname "Gogo $tag ($arch)" \
     --volicon Resources/AppIcon.icns \
     --window-pos 200 120 \
     --window-size 560 340 \
     --icon-size 100 \
     --text-size 12 \
-    --icon "gogo.app" 150 160 \
-    --hide-extension "gogo.app" \
+    --icon "Gogo.app" 150 160 \
+    --hide-extension "Gogo.app" \
     --app-drop-link 410 160 \
     --no-internet-enable \
     --overwrite \
-    "$output/gogo-${tag}-${arch}.dmg" "$source_folder"
+    "$output/Gogo-${tag}-${arch}.dmg" "$source_folder"
 done
 (
   cd "$output"
-  shasum -a 256 "gogo-${tag}-arm64.dmg" "gogo-${tag}-x86_64.dmg" > SHA256SUMS.txt
+  shasum -a 256 "Gogo-${tag}-arm64.dmg" "Gogo-${tag}-x86_64.dmg" > SHA256SUMS.txt
 )

@@ -48,8 +48,8 @@ final class FinderSync: FIFinderSync {
         let directories = Set(volumes.filter(\.isFileURL).map(\.standardizedFileURL)).union([root])
         if controller.directoryURLs != directories { controller.directoryURLs = directories }
     }
-    override var toolbarItemName: String { "gogo" }
-    override var toolbarItemToolTip: String { "gogo" }
+    override var toolbarItemName: String { "Gogo" }
+    override var toolbarItemToolTip: String { "Gogo" }
     override var toolbarItemImage: NSImage { FinderIcons.toolbar }
 
     override func menu(for menuKind: FIMenuKind) -> NSMenu? {
@@ -75,11 +75,10 @@ final class FinderSync: FIFinderSync {
             let unavailable = NSMenuItem(title: Texts.get("configuration.unavailable"), action: nil, keyEquivalent: "")
             unavailable.image = FinderIcons.symbol("exclamationmark.triangle")
             unavailable.isEnabled = false; content.addItem(unavailable)
-            addCopyPath(to: content, selected: copyTargets, language: .system, kind: menuKind)
+            addCopyPath(to: layout, selected: copyTargets, language: .system, kind: menuKind)
             addSettings(to: content, language: .system)
             return layout.presented(submenuTitle: Texts.get("finder.quickOpen"), submenuImage: FinderIcons.menuLogo)
         }
-        if !toolbar && !config.showContextMenu { return nil }
         if !toolbar || config.showToolbarLaunchers {
             for launcher in config.launchers where launcher.enabled {
                 let title = !toolbar && launcher.showInContextMenuRoot
@@ -100,20 +99,22 @@ final class FinderSync: FIFinderSync {
                 empty.isEnabled = false; content.addItem(empty)
             }
         }
-        addCopyPath(to: content, selected: copyTargets, language: config.language, kind: menuKind)
+        addCopyPath(to: layout, selected: copyTargets, language: config.language, kind: menuKind,
+                    directlyInContextMenu: config.showCopyPathInContextMenuRoot)
         addSettings(to: content, language: config.language)
-        return layout.presented(submenuTitle: Texts.get("finder.quickOpen", language: config.language),
-                                submenuImage: FinderIcons.menuLogo)
+        let menu = layout.presented(submenuTitle: Texts.get("finder.quickOpen", language: config.language),
+                                    submenuImage: FinderIcons.menuLogo, showSubmenu: config.showContextMenu)
+        return menu.items.isEmpty ? nil : menu
     }
 
-    private func addCopyPath(to menu: NSMenu, selected: [URL], language: AppLanguage, kind: FIMenuKind) {
-        addSeparator(to: menu)
+    private func addCopyPath(to layout: FinderMenu, selected: [URL], language: AppLanguage, kind: FIMenuKind,
+                             directlyInContextMenu: Bool = false) {
         let item = NSMenuItem(title: Texts.get("path.copy", language: language), action: #selector(copyPath(_:)), keyEquivalent: "")
         item.image = FinderIcons.symbol("doc.on.doc")
         // Snapshot the menu's context; selection may change before the action arrives.
         remember(.copy(selected.map(\.path)), for: item, kind: kind)
         item.isEnabled = !selected.isEmpty
-        menu.addItem(item)
+        layout.addCopyPath(item, directlyInContextMenu: directlyInContextMenu, addSeparator: addSeparator)
     }
 
     // Leave NSMenuItem.target unset so Finder routes actions to this extension.
@@ -146,7 +147,7 @@ final class FinderSync: FIFinderSync {
     }
 
     private var hostURL: URL {
-        // gogo.app/Contents/PlugIns/GogoFinder.appex -> gogo.app
+        // Gogo.app/Contents/PlugIns/GogoFinder.appex -> Gogo.app
         Bundle.main.bundleURL.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
     }
     @IBAction func settings(_ sender: Any?) {
