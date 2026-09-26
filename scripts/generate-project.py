@@ -21,7 +21,7 @@ config = ROOT/'Config'
 config.mkdir(exist_ok=True)
 host_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABLE_NAME)',
     CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='Gogo', CFBundleDisplayName='Gogo',
-    CFBundlePackageType='APPL', CFBundleShortVersionString='0.1.0', CFBundleVersion='1',
+    CFBundlePackageType='APPL', CFBundleShortVersionString='0.1.3', CFBundleVersion='0.1.3',
     CFBundleIconFile='AppIcon', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
     LSUIElement=True, NSHighResolutionCapable=True,
     CFBundleDocumentTypes=[dict(CFBundleTypeName='Gogo Launch Request', CFBundleTypeRole='Viewer',
@@ -37,8 +37,8 @@ host_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABL
     NSAppleEventsUsageDescription='Gogo needs permission to control iTerm2 to open a terminal in the folder you choose.')
 extension_info = dict(CFBundleDevelopmentRegion='en', CFBundleExecutable='$(EXECUTABLE_NAME)',
     CFBundleIdentifier='$(PRODUCT_BUNDLE_IDENTIFIER)', CFBundleName='Gogo Finder',
-    CFBundleDisplayName='Gogo', CFBundlePackageType='XPC!', CFBundleShortVersionString='0.1.0',
-    CFBundleVersion='1', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
+    CFBundleDisplayName='Gogo', CFBundlePackageType='XPC!', CFBundleShortVersionString='0.1.3',
+    CFBundleVersion='0.1.3', LSMinimumSystemVersion='$(MACOSX_DEPLOYMENT_TARGET)',
     NSExtension=dict(NSExtensionPointIdentifier='com.apple.FinderSync', NSExtensionPrincipalClass='$(PRODUCT_MODULE_NAME).FinderSync'))
 for filename, value in [('Gogo-Info.plist',host_info),('Finder-Info.plist',extension_info),
     ('Gogo.entitlements', {'com.apple.security.automation.apple-events':True}),
