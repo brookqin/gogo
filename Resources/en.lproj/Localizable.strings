@@ -32,7 +32,7 @@
 "extension.instructions" = "Enable gogo in macOS extension settings.";
 "extension.manage" = "Manage Extensions…";
 "refresh" = "Refresh Status";
-"finder.context" = "Show Quick Open with gogo in context menus";
+"finder.context" = "Show gogo in context menus";
 "finder.toolbar" = "Show launchers in the toolbar menu";
 "finder.toolbar.help" = "In Finder, choose View → Customize Toolbar to add or remove the gogo button.";
 "finder.behavior.title" = "Which location opens?";
@@ -45,6 +45,8 @@
 "about.status" = "Open source";
 "about.github" = "Source Code on GitHub";
 "launcher.edit" = "Edit Launcher";
+"launcher.context.direct" = "Show directly in context menu";
+"launcher.context.direct.help" = "When off, this launcher appears in the Quick Open with gogo submenu. The toolbar menu is unchanged.";
 "name" = "Name";
 "program" = "Program Path";
 "program.placeholder" = "Automatic detection or absolute path";
@@ -89,6 +91,7 @@
 "settings.saveFailed" = "Your settings could not be saved. Your changes have not been applied. Please try again.";
 "path.copy" = "Copy Current Path";
 "finder.quickOpen" = "Quick Open with gogo";
+"launcher.openWith" = "Open with %@";
 
 "permissions.title" = "Permissions";
 "permissions.description" = "Manage Finder integration, file access, and iTerm2 Automation.";

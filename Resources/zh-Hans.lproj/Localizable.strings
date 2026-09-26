@@ -32,7 +32,7 @@
 "extension.instructions" = "在系统扩展设置中启用 gogo。";
 "extension.manage" = "管理扩展…";
 "refresh" = "刷新状态";
-"finder.context" = "在右键菜单中显示“用 gogo 快速打开”";
+"finder.context" = "在右键菜单中显示 gogo";
 "finder.toolbar" = "在工具栏菜单中显示启动项";
 "finder.toolbar.help" = "在 Finder 的“显示 → 自定工具栏”中添加或移除 gogo 按钮。";
 "finder.behavior.title" = "打开哪个位置？";
@@ -45,6 +45,8 @@
 "about.status" = "开源项目";
 "about.github" = "在 GitHub 查看源码";
 "launcher.edit" = "编辑启动项";
+"launcher.context.direct" = "直接显示在右键菜单";
+"launcher.context.direct.help" = "关闭时，此启动项显示在“用 gogo 快速打开”子菜单中。不影响工具栏菜单。";
 "name" = "名称";
 "program" = "程序路径";
 "program.placeholder" = "自动识别或填写绝对路径";
@@ -89,6 +91,7 @@
 "settings.saveFailed" = "无法保存设置，本次更改尚未生效。请重试。";
 "path.copy" = "复制当前路径";
 "finder.quickOpen" = "用 gogo 快速打开";
+"launcher.openWith" = "用 %@ 打开";
 
 "permissions.title" = "权限管理";
 "permissions.description" = "管理 Finder 扩展、文件访问和 iTerm2 自动化权限。";

@@ -24,7 +24,7 @@ Open Finder selections in your favorite terminal, editor, or custom program.
 
 - Configurable presets for Terminal, iTerm2, Ghostty, Visual Studio Code, Zed, Fork, Typora, and Xcode.
 - Custom application or executable paths and one argument per line.
-- Finder context submenu and toolbar menu, with a persistent Settings recovery entry.
+- Choose per launcher whether to show it directly in the Finder context menu or inside Quick Open with gogo. The toolbar menu is unchanged.
 - Finder menus cover visible mounted volumes, including external drives, and refresh when drives are connected or ejected.
 - Drag to reorder launchers; click a row to edit.
 - Automatically follows the system language, with English and Simplified Chinese overrides.

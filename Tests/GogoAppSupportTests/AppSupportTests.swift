@@ -55,6 +55,22 @@ private func temporaryDirectory() throws -> URL {
     #expect(model.error != nil)
 }
 
+@MainActor @Test func contextPlacementSavesReloadsAndCanBeReverted() throws {
+    let directory = try temporaryDirectory()
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let file = ConfigurationFile(url: directory.appendingPathComponent("configuration.json"))
+    let model = AppModel(preview: true, configurationFile: file)
+    var launcher = model.configuration.launchers[0]
+    launcher.showInContextMenuRoot = true
+    #expect(model.saveLauncher(launcher))
+    let reloaded = AppModel(preview: true, configurationFile: file)
+    #expect(reloaded.configuration.launchers[0] == launcher)
+    #expect(reloaded.configuration.launchers.dropFirst() == model.configuration.launchers.dropFirst())
+    launcher.showInContextMenuRoot = false
+    #expect(reloaded.saveLauncher(launcher))
+    #expect(try file.read().launchers[0] == launcher)
+}
+
 @MainActor @Test func corruptConfigurationRemainsReadOnlyAndUnmodified() throws {
     let directory = try temporaryDirectory()
     defer { try? FileManager.default.removeItem(at: directory) }

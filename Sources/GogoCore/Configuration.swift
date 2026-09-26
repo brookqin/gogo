@@ -21,17 +21,44 @@ public struct Launcher: Codable, Identifiable, Equatable, Sendable {
     public var acceptsFolders: Bool
     public var enabled: Bool
     public var builtIn: Bool
+    public var showInContextMenuRoot: Bool
 
     public init(id: UUID = UUID(), name: String, bundleID: String? = nil,
                 program: String = "", method: LaunchMethod = .documents,
                 arguments: [String] = ["{paths}"], workingDirectory: String = "{directory}",
                 directoriesOnly: Bool = false, acceptsFiles: Bool = true,
-                acceptsFolders: Bool = true, enabled: Bool = true, builtIn: Bool = false) {
+                acceptsFolders: Bool = true, enabled: Bool = true, builtIn: Bool = false,
+                showInContextMenuRoot: Bool = false) {
         self.id = id; self.name = name; self.bundleID = bundleID
         self.program = program; self.method = method; self.arguments = arguments
         self.workingDirectory = workingDirectory; self.directoriesOnly = directoriesOnly
         self.acceptsFiles = acceptsFiles; self.acceptsFolders = acceptsFolders
         self.enabled = enabled; self.builtIn = builtIn
+        self.showInContextMenuRoot = showInContextMenuRoot
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, bundleID, program, method, arguments, workingDirectory
+        case directoriesOnly, acceptsFiles, acceptsFolders, enabled, builtIn, showInContextMenuRoot
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(UUID.self, forKey: .id)
+        name = try values.decode(String.self, forKey: .name)
+        bundleID = try values.decodeIfPresent(String.self, forKey: .bundleID)
+        program = try values.decode(String.self, forKey: .program)
+        method = try values.decode(LaunchMethod.self, forKey: .method)
+        arguments = try values.decode([String].self, forKey: .arguments)
+        workingDirectory = try values.decode(String.self, forKey: .workingDirectory)
+        directoriesOnly = try values.decode(Bool.self, forKey: .directoriesOnly)
+        acceptsFiles = try values.decode(Bool.self, forKey: .acceptsFiles)
+        acceptsFolders = try values.decode(Bool.self, forKey: .acceptsFolders)
+        enabled = try values.decode(Bool.self, forKey: .enabled)
+        builtIn = try values.decode(Bool.self, forKey: .builtIn)
+        // Additive version-1 field: old configurations keep their submenu placement.
+        showInContextMenuRoot = try values.contains(.showInContextMenuRoot)
+            ? values.decode(Bool.self, forKey: .showInContextMenuRoot) : false
     }
 
     public static let presets: [Launcher] = [

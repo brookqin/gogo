@@ -288,6 +288,14 @@ private struct LauncherInspector: View {
             VStack(alignment: .leading, spacing: 17) {
                 Text(model.t("launcher.edit")).font(.headline)
                 field("name") { TextField(model.t("name"), text: $launcher.name) }
+                VStack(alignment: .leading, spacing: 7) {
+                    Toggle(model.t("launcher.context.direct"), isOn: $launcher.showInContextMenuRoot)
+                        .toggleStyle(.switch).controlSize(.small)
+                        .accessibilityIdentifier("launcher.context.direct")
+                    Text(model.t("launcher.context.direct.help"))
+                        .font(.caption).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
                 field("program") {
                     HStack {
                         TextField(model.t("program.placeholder"), text: $launcher.program)

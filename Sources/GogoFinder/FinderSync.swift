@@ -55,8 +55,9 @@ final class FinderSync: FIFinderSync {
     override func menu(for menuKind: FIMenuKind) -> NSMenu? {
         // Finder transports menu-item tags; payloads stay inside the extension.
         for tag in menuTags.removeValue(forKey: menuKind.rawValue) ?? [] { actions.removeValue(forKey: tag) }
-        let menu = NSMenu()
         let toolbar = menuKind == .toolbarItemMenu
+        let layout = FinderMenu(toolbar: toolbar)
+        let content = layout.content
         let controller = FIFinderSyncController.default()
         let selectedItems = controller.selectedItemURLs() ?? []
         let currentFolder = controller.targetedURL().map { [$0] } ?? []
@@ -73,24 +74,25 @@ final class FinderSync: FIFinderSync {
         catch {
             let unavailable = NSMenuItem(title: Texts.get("configuration.unavailable"), action: nil, keyEquivalent: "")
             unavailable.image = FinderIcons.symbol("exclamationmark.triangle")
-            unavailable.isEnabled = false; menu.addItem(unavailable)
-            menu.autoenablesItems = false
-            addCopyPath(to: menu, selected: copyTargets, language: .system, kind: menuKind)
-            addSettings(to: menu, language: .system)
-            return presentation(of: menu, toolbar: toolbar, language: .system)
+            unavailable.isEnabled = false; content.addItem(unavailable)
+            addCopyPath(to: content, selected: copyTargets, language: .system, kind: menuKind)
+            addSettings(to: content, language: .system)
+            return layout.presented(submenuTitle: Texts.get("finder.quickOpen"), submenuImage: FinderIcons.menuLogo)
         }
         if !toolbar && !config.showContextMenu { return nil }
-        let content = NSMenu()
         if !toolbar || config.showToolbarLaunchers {
             for launcher in config.launchers where launcher.enabled {
-                let item = NSMenuItem(title: launcher.name, action: #selector(launch(_:)), keyEquivalent: "")
+                let title = !toolbar && launcher.showInContextMenuRoot
+                    ? String(format: Texts.get("launcher.openWith", language: config.language), launcher.name)
+                    : launcher.name
+                let item = NSMenuItem(title: title, action: #selector(launch(_:)), keyEquivalent: "")
                 item.image = FinderIcons.launcher(launcher)
                 let selection = LaunchSelection(paths: selected.map(\.path))
                 let request = LaunchRequest(launcherID: launcher.id, selection: selection)
                 remember(.launch(request), for: item, kind: menuKind)
                 // Availability and capabilities are reevaluated when the user opens the menu.
                 item.isEnabled = (try? request.encoded()) != nil && (try? LaunchPlan.make(launcher: launcher, selection: selection, isDirectory: Applications.isDirectory)) != nil
-                content.addItem(item)
+                layout.addLauncher(item, directlyInContextMenu: launcher.showInContextMenuRoot)
             }
             if selected.isEmpty {
                 let empty = NSMenuItem(title: Texts.get("selection.unavailable", language: config.language), action: nil, keyEquivalent: "")
@@ -98,20 +100,10 @@ final class FinderSync: FIFinderSync {
                 empty.isEnabled = false; content.addItem(empty)
             }
         }
-        content.autoenablesItems = false
         addCopyPath(to: content, selected: copyTargets, language: config.language, kind: menuKind)
         addSettings(to: content, language: config.language)
-        return presentation(of: content, toolbar: toolbar, language: config.language)
-    }
-
-    private func presentation(of content: NSMenu, toolbar: Bool, language: AppLanguage) -> NSMenu {
-        if toolbar { return content }
-        let menu = NSMenu()
-        let parent = NSMenuItem(title: Texts.get("finder.quickOpen", language: language), action: nil, keyEquivalent: "")
-        parent.image = FinderIcons.menuLogo
-        parent.submenu = content
-        menu.addItem(parent)
-        return menu
+        return layout.presented(submenuTitle: Texts.get("finder.quickOpen", language: config.language),
+                                submenuImage: FinderIcons.menuLogo)
     }
 
     private func addCopyPath(to menu: NSMenu, selected: [URL], language: AppLanguage, kind: FIMenuKind) {
