@@ -62,7 +62,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         self.model = model
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 660),
                               styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
-        window.title = preview ? "gogo · Preview" : "gogo"
+        window.title = preview ? "Gogo · Preview" : "Gogo"
         window.minSize = NSSize(width: 980, height: 620)
         window.contentView = NSHostingView(rootView: SettingsView(model: model))
         window.delegate = self

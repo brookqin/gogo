@@ -21,17 +21,44 @@ public struct Launcher: Codable, Identifiable, Equatable, Sendable {
     public var acceptsFolders: Bool
     public var enabled: Bool
     public var builtIn: Bool
+    public var showInContextMenuRoot: Bool
 
     public init(id: UUID = UUID(), name: String, bundleID: String? = nil,
                 program: String = "", method: LaunchMethod = .documents,
                 arguments: [String] = ["{paths}"], workingDirectory: String = "{directory}",
                 directoriesOnly: Bool = false, acceptsFiles: Bool = true,
-                acceptsFolders: Bool = true, enabled: Bool = true, builtIn: Bool = false) {
+                acceptsFolders: Bool = true, enabled: Bool = true, builtIn: Bool = false,
+                showInContextMenuRoot: Bool = false) {
         self.id = id; self.name = name; self.bundleID = bundleID
         self.program = program; self.method = method; self.arguments = arguments
         self.workingDirectory = workingDirectory; self.directoriesOnly = directoriesOnly
         self.acceptsFiles = acceptsFiles; self.acceptsFolders = acceptsFolders
         self.enabled = enabled; self.builtIn = builtIn
+        self.showInContextMenuRoot = showInContextMenuRoot
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, name, bundleID, program, method, arguments, workingDirectory
+        case directoriesOnly, acceptsFiles, acceptsFolders, enabled, builtIn, showInContextMenuRoot
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(UUID.self, forKey: .id)
+        name = try values.decode(String.self, forKey: .name)
+        bundleID = try values.decodeIfPresent(String.self, forKey: .bundleID)
+        program = try values.decode(String.self, forKey: .program)
+        method = try values.decode(LaunchMethod.self, forKey: .method)
+        arguments = try values.decode([String].self, forKey: .arguments)
+        workingDirectory = try values.decode(String.self, forKey: .workingDirectory)
+        directoriesOnly = try values.decode(Bool.self, forKey: .directoriesOnly)
+        acceptsFiles = try values.decode(Bool.self, forKey: .acceptsFiles)
+        acceptsFolders = try values.decode(Bool.self, forKey: .acceptsFolders)
+        enabled = try values.decode(Bool.self, forKey: .enabled)
+        builtIn = try values.decode(Bool.self, forKey: .builtIn)
+        // Additive version-1 field: old configurations keep their submenu placement.
+        showInContextMenuRoot = try values.contains(.showInContextMenuRoot)
+            ? values.decode(Bool.self, forKey: .showInContextMenuRoot) : false
     }
 
     public static let presets: [Launcher] = [
@@ -68,8 +95,25 @@ public struct Configuration: Codable, Equatable, Sendable {
     public var language: AppLanguage = .system
     public var showContextMenu = true
     public var showToolbarLaunchers = true
+    public var showCopyPathInContextMenuRoot = false
     public var launchers: [Launcher] = Launcher.presets
     public init() {}
+
+    private enum CodingKeys: String, CodingKey {
+        case version, language, showContextMenu, showToolbarLaunchers, showCopyPathInContextMenuRoot, launchers
+    }
+
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        version = try values.decode(Int.self, forKey: .version)
+        language = try values.decode(AppLanguage.self, forKey: .language)
+        showContextMenu = try values.decode(Bool.self, forKey: .showContextMenu)
+        showToolbarLaunchers = try values.decode(Bool.self, forKey: .showToolbarLaunchers)
+        launchers = try values.decode([Launcher].self, forKey: .launchers)
+        // Older version-1 snapshots keep Copy Current Path in the submenu.
+        showCopyPathInContextMenuRoot = try values.contains(.showCopyPathInContextMenuRoot)
+            ? values.decode(Bool.self, forKey: .showCopyPathInContextMenuRoot) : false
+    }
 
     public func validate() throws {
         guard version == 1 else { throw GogoError.unsupportedVersion }

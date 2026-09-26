@@ -9,9 +9,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
-	<string>gogo</string>
+	<string>Gogo</string>
 	<key>CFBundleDisplayName</key>
-	<string>gogo</string>
+	<string>Gogo</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -30,7 +30,7 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>gogo Launch Request</string>
+			<string>Gogo Launch Request</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSHandlerRank</key>
@@ -51,7 +51,7 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>gogo Launch Request</string>
+			<string>Gogo Launch Request</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -62,16 +62,16 @@
 		</dict>
 	</array>
 	<key>NSDesktopFolderUsageDescription</key>
-	<string>gogo needs access to open items from your Desktop in the apps you choose.</string>
+	<string>Gogo needs access to open items from your Desktop in the apps you choose.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string>gogo needs access to open items from Documents in the apps you choose.</string>
+	<string>Gogo needs access to open items from Documents in the apps you choose.</string>
 	<key>NSDownloadsFolderUsageDescription</key>
-	<string>gogo needs access to open items from Downloads in the apps you choose.</string>
+	<string>Gogo needs access to open items from Downloads in the apps you choose.</string>
 	<key>NSRemovableVolumesUsageDescription</key>
-	<string>gogo needs access to open items on external drives in the apps you choose.</string>
+	<string>Gogo needs access to open items on external drives in the apps you choose.</string>
 	<key>NSNetworkVolumesUsageDescription</key>
-	<string>gogo needs access to open items on network volumes in the apps you choose.</string>
+	<string>Gogo needs access to open items on network volumes in the apps you choose.</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>gogo needs permission to control iTerm2 to open a terminal in the folder you choose.</string>
+	<string>Gogo needs permission to control iTerm2 to open a terminal in the folder you choose.</string>
 </dict>
 </plist>

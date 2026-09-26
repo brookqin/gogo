@@ -9,9 +9,9 @@ enum FinderIcons {
     private static func logo(size: Int) -> NSImage {
         let source = Bundle.main.url(forResource: "GogoTemplate", withExtension: "svg")
             .flatMap { NSImage(contentsOf: $0) }
-            ?? NSImage(systemSymbolName: "arrow.up.forward", accessibilityDescription: "gogo")!
+            ?? NSImage(systemSymbolName: "arrow.up.forward", accessibilityDescription: "Gogo")!
         let image = rasterized(source, size: size, template: true)
-        image.accessibilityDescription = "gogo"
+        image.accessibilityDescription = "Gogo"
         return image
     }
 

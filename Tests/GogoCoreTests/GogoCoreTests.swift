@@ -65,9 +65,53 @@ import Testing
 
 @Test func defaultPresetsValidate() throws { try Configuration().validate() }
 
+@Test func legacyLaunchersKeepSubmenuPlacement() throws {
+    var original = Configuration()
+    original.language = .zhHans
+    original.launchers.reverse()
+    original.launchers[0].name = "Edited preset"
+    var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
+    var launchers = try #require(json["launchers"] as? [[String: Any]])
+    for index in launchers.indices { launchers[index].removeValue(forKey: "showInContextMenuRoot") }
+    json["launchers"] = launchers
+    let restored = try JSONDecoder().decode(Configuration.self, from: JSONSerialization.data(withJSONObject: json))
+    #expect(restored == original)
+    #expect(restored.launchers.allSatisfy { !$0.showInContextMenuRoot })
+}
+
+@Test func invalidPlacementDoesNotSilentlyReset() throws {
+    var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(Launcher.presets[0])) as? [String: Any])
+    for invalid in ["true" as Any, NSNull()] {
+        json["showInContextMenuRoot"] = invalid
+        let data = try JSONSerialization.data(withJSONObject: json)
+        #expect(throws: (any Error).self) { try JSONDecoder().decode(Launcher.self, from: data) }
+    }
+}
+
 @Test func oversizedRequestsAreRejectedBeforeDispatch() {
     let request = LaunchRequest(launcherID: UUID(), selection: LaunchSelection(paths: (0..<20).map {
         "/tmp/\($0)/" + String(repeating: "x", count: 8000)
     }))
     #expect(throws: GogoError.invalidRequest) { try request.encoded() }
+}
+
+@Test func legacyConfigurationKeepsCopyPathInSubmenu() throws {
+    var original = Configuration()
+    original.language = .en
+    original.showContextMenu = false
+    original.launchers[0].showInContextMenuRoot = true
+    var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
+    json.removeValue(forKey: "showCopyPathInContextMenuRoot")
+    let restored = try JSONDecoder().decode(Configuration.self, from: JSONSerialization.data(withJSONObject: json))
+    #expect(restored == original)
+    #expect(!restored.showCopyPathInContextMenuRoot)
+}
+
+@Test func invalidCopyPathPlacementIsRejected() throws {
+    var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(Configuration())) as? [String: Any])
+    for invalid in ["true" as Any, NSNull()] {
+        json["showCopyPathInContextMenuRoot"] = invalid
+        let data = try JSONSerialization.data(withJSONObject: json)
+        #expect(throws: (any Error).self) { try JSONDecoder().decode(Configuration.self, from: data) }
+    }
 }

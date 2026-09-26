@@ -54,9 +54,9 @@ jobs:
           gh release create "$RELEASE_TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \
-            --title "gogo $RELEASE_TAG" \
+            --title "Gogo $RELEASE_TAG" \
             --notes-file .build/release/CHANGELOG.md \
             "${flags[@]}" \
-            ".build/release/gogo-${RELEASE_TAG}-arm64.dmg" \
-            ".build/release/gogo-${RELEASE_TAG}-x86_64.dmg" \
+            ".build/release/Gogo-${RELEASE_TAG}-arm64.dmg" \
+            ".build/release/Gogo-${RELEASE_TAG}-x86_64.dmg" \
             .build/release/SHA256SUMS.txt

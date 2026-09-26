@@ -7,10 +7,13 @@ let package = Package(
     products: [.library(name: "GogoCore", targets: ["GogoCore"])],
     targets: [
         .target(name: "GogoCore"),
+        .target(name: "GogoFinderMenus", path: "Sources/GogoFinder",
+                exclude: ["FinderSync.swift", "FinderIcons.swift"], sources: ["FinderMenu.swift"]),
         .target(name: "GogoAppSupport", dependencies: ["GogoCore"], path: "Sources",
                 exclude: ["GogoCore", "GogoFinder", "Gogo/main.swift", "Gogo/SettingsView.swift", "Gogo/PermissionGuide.swift"],
                 sources: ["Platform.swift", "Gogo/AppModel.swift", "Gogo/LauncherEngine.swift", "Gogo/Permissions.swift"]),
         .testTarget(name: "GogoCoreTests", dependencies: ["GogoCore"]),
+        .testTarget(name: "GogoFinderMenusTests", dependencies: ["GogoFinderMenus"]),
         .testTarget(name: "GogoAppSupportTests", dependencies: ["GogoAppSupport", "GogoCore"])
     ]
 )

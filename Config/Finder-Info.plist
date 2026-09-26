@@ -9,9 +9,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
-	<string>gogo Finder</string>
+	<string>Gogo Finder</string>
 	<key>CFBundleDisplayName</key>
-	<string>gogo</string>
+	<string>Gogo</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
