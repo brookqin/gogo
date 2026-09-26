@@ -13,3 +13,6 @@ Config/Signing.xcconfig
 !/docs/screenshots/launchers-zh.png
 !/docs/screenshots/finder-context-menu.png
 !/docs/screenshots/finder-toolbar-menu.png
+!/docs/screenshots/finder-context-menu-zh.png
+!/docs/screenshots/finder-settings-en.png
+!/docs/screenshots/finder-settings-zh.png
